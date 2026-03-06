@@ -266,11 +266,16 @@ function normalizeProducts(list) {
     const id = String(p.id || "").trim();
     const price = Number(p.price);
     if (id && Number.isFinite(price) && price >= 0) {
-      priceMap.set(id, Math.round(price));
+      priceMap.set(id, {
+        price: Math.round(price),
+        weekendPrice: (p.weekendPrice != null && Number.isFinite(Number(p.weekendPrice)) && Number(p.weekendPrice) >= 0)
+          ? Math.round(Number(p.weekendPrice))
+          : null
+      });
     }
   }
 
-  // Always use DEFAULT_PRODUCTS order — only take price from DB if saved
+  // Always use DEFAULT_PRODUCTS order — only take prices from DB if saved
   const result = [];
   for (const dp of DEFAULT_PRODUCTS) {
     if (!dp || typeof dp !== "object") continue;
@@ -281,8 +286,12 @@ function normalizeProducts(list) {
     if (dp.desc) extra.desc = String(dp.desc);
     if (dp.subcat) extra.subcat = String(dp.subcat);
     if (dp.alcoholFree) extra.alcoholFree = true;
-    const price = priceMap.has(id) ? priceMap.get(id) : Math.round(Number(dp.price) || 0);
-    result.push({ id, name: dp.name, cat: dp.cat, price, ...extra });
+    const saved = priceMap.get(id);
+    const price = saved ? saved.price : Math.round(Number(dp.price) || 0);
+    const weekendPrice = saved ? saved.weekendPrice : null;
+    const entry = { id, name: dp.name, cat: dp.cat, price, ...extra };
+    if (weekendPrice != null) entry.weekendPrice = weekendPrice;
+    result.push(entry);
   }
   return result;
 }

@@ -703,6 +703,17 @@ function initProducts(){ hydrateProducts(); renderProducts(); }
 // bump version so newly added default items (e.g. Light drinks) appear even if older data was cached
 const PRODUCTS_STORAGE_KEY = "bs_products_v4";
 
+// Returns the currently active price based on day of week
+// Mo–Do = price, Fr–So = weekendPrice (if set)
+function getActivePrice(p) {
+  const day = new Date().getDay(); // 0=So, 1=Mo, ..., 5=Fr, 6=Sa
+  const isWeekend = (day === 0 || day === 5 || day === 6);
+  if (isWeekend && p.weekendPrice != null && p.weekendPrice > 0) {
+    return p.weekendPrice;
+  }
+  return p.price;
+}
+
 function loadProductsFromStorage(){
   try{
     const raw = localStorage.getItem(PRODUCTS_STORAGE_KEY);
@@ -748,7 +759,7 @@ async function hydrateProducts(){
     if(res.ok){
       const data = await res.json().catch(()=>({}));
       if(data.success && Array.isArray(data.products) && data.products.length){
-        PRODUCTS = data.products.map(p=>({ id:p.id, name:p.name, cat:p.cat, subcat:p.subcat||null, price:Number(p.price)||0, icon:p.icon||null, desc:p.desc||null, alcoholFree:p.alcoholFree||false }));
+        PRODUCTS = data.products.map(p=>({ id:p.id, name:p.name, cat:p.cat, subcat:p.subcat||null, price:Number(p.price)||0, weekendPrice:(p.weekendPrice!=null?Number(p.weekendPrice):null), icon:p.icon||null, desc:p.desc||null, alcoholFree:p.alcoholFree||false }));
         saveProductsToStorage(PRODUCTS); // keep fallback in sync
         return;
       }
@@ -770,17 +781,20 @@ async function hydrateProducts(){
 function renderProductsEditor(){
   const body = document.getElementById("mgmtProductsBody");
   const msg = document.getElementById("mgmtProductsMsg");
-  if(!body) return; // panel might not exist
+  if(!body) return;
   const list = (PRODUCTS||[]).slice().sort((a,b)=>(a.cat||"").localeCompare(b.cat||"") || (a.name||"").localeCompare(b.name||""));
   body.innerHTML = list.map((p, idx)=>`
     <tr>
       <td>${esc(p.name)}</td>
       <td>${esc(p.cat)}</td>
       <td style="text-align:right;">
-        <input class="input" style="width:110px; text-align:right; padding:8px 10px;" data-price-key="${escAttr(slugKey(p))}" value="${escAttr(p.price)}" />
+        <input class="input" style="width:90px; text-align:right; padding:8px 10px;" data-price-key="${escAttr(slugKey(p))}" value="${escAttr(p.price)}" title="Mo–Do Preis" />
+      </td>
+      <td style="text-align:right;">
+        <input class="input" style="width:90px; text-align:right; padding:8px 10px; opacity:${p.weekendPrice!=null&&p.weekendPrice>0?'1':'.45'};" data-weekend-price-key="${escAttr(slugKey(p))}" value="${escAttr(p.weekendPrice!=null&&p.weekendPrice>0?p.weekendPrice:'')}" placeholder="= Mo–Do" title="Fr–So Preis (leer = gleich wie Mo–Do)" />
       </td>
     </tr>
-  `).join("") || `<tr><td colspan="3" class="muted small">Keine Produkte.</td></tr>`;
+  `).join("") || `<tr><td colspan="4" class="muted small">Keine Produkte.</td></tr>`;
   if(msg) msg.innerText = "—";
 }
 
@@ -808,11 +822,30 @@ async function mgmtSaveProducts(){
     priceMap.set(key, Math.round(n));
   }
 
+  // collect weekend prices
+  const weekendInputs = Array.from(document.querySelectorAll("[data-weekend-price-key]"));
+  const weekendPriceMap = new Map();
+  for(const el of weekendInputs){
+    const key = el.getAttribute("data-weekend-price-key");
+    const raw = el.value.trim();
+    if(raw === ""){
+      weekendPriceMap.set(key, null); // no weekend price = same as weekday
+    } else {
+      const n = parseMoney(raw);
+      if(!Number.isFinite(n) || n<0){
+        if(msg) msg.innerText = "Ungültiger WE-Preis.";
+        return;
+      }
+      weekendPriceMap.set(key, Math.round(n));
+    }
+  }
+
   // apply to PRODUCTS by key
   const list = (PRODUCTS||[]).map(p=>{
     const key = slugKey(p);
     const hit = priceMap.get(key);
-    return hit != null ? { ...p, price: hit } : { ...p };
+    const weHit = weekendPriceMap.has(key) ? weekendPriceMap.get(key) : p.weekendPrice;
+    return { ...p, price: hit != null ? hit : p.price, weekendPrice: weHit };
   });
 
   // server first
@@ -823,7 +856,8 @@ async function mgmtSaveProducts(){
       cat: p.cat,
       subcat: p.subcat || null,
       icon: p.icon || null,
-      price: p.price
+      price: p.price,
+      weekendPrice: p.weekendPrice != null ? p.weekendPrice : null
     }));
     const res = await fetch("/products",{
       method:"PUT",
@@ -833,7 +867,7 @@ async function mgmtSaveProducts(){
     const data = await res.json().catch(()=>({}));
     if(res.ok && data.success){
       if(Array.isArray(data.products) && data.products.length){
-        PRODUCTS = data.products.map(p=>({ id:p.id, name:p.name, cat:p.cat, subcat:p.subcat||null, price:Number(p.price)||0, icon:p.icon||null, desc:p.desc||null, alcoholFree:p.alcoholFree||false }));
+        PRODUCTS = data.products.map(p=>({ id:p.id, name:p.name, cat:p.cat, subcat:p.subcat||null, price:Number(p.price)||0, weekendPrice:(p.weekendPrice!=null?Number(p.weekendPrice):null), icon:p.icon||null, desc:p.desc||null, alcoholFree:p.alcoholFree||false }));
       }else{
         PRODUCTS = list;
       }
@@ -1717,15 +1751,24 @@ function renderProductList(list, box){
     const n=document.createElement('div');
     n.className='dispName';
     n.textContent=p.name;
+    const activePrice = getActivePrice(p);
     const pr=document.createElement('div');
     pr.className='dispPrice';
-    pr.textContent=money(p.price);
+    pr.textContent=money(activePrice);
     meta.appendChild(n);
     if(p.alcoholFree){
       const badge=document.createElement('div');
       badge.style.cssText='font-size:9px; color:#4caf50; font-weight:700; letter-spacing:.5px; margin-top:2px; text-align:center;';
       badge.textContent='ALKOHOLFREI';
       meta.appendChild(badge);
+    }
+    if(p.weekendPrice != null && p.weekendPrice > 0 && p.weekendPrice !== p.price){
+      const day = new Date().getDay();
+      const isWeekend = (day === 0 || day === 5 || day === 6);
+      const weBadge = document.createElement('div');
+      weBadge.style.cssText='font-size:9px; font-weight:700; letter-spacing:.5px; text-align:center; margin-top:1px; opacity:.8; color:#ffd700;';
+      weBadge.textContent = isWeekend ? '🎉 WE-Preis' : 'WE: '+money(p.weekendPrice);
+      meta.appendChild(weBadge);
     }
     if(p.desc){
       const desc=document.createElement('div');
@@ -1799,8 +1842,9 @@ function addToCart(p){
   const productId = p.id || (PRODUCTS||[]).find(x=>x.name===p.name)?.id || slugKey(p);
   // Merge with existing cart item if same product
   const existing = cart.find(x => x.productId === productId && !x.components);
+  const activePrice = getActivePrice(p);
   if(existing){ existing.qty = (existing.qty||1) + 1; }
-  else { cart.push({ name: p.name, price: p.price, qty: 1, productId: productId }); }
+  else { cart.push({ name: p.name, price: activePrice, qty: 1, productId: productId }); }
   renderCart();
   saveCartsDebounced();
   sendPresencePing();
