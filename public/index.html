@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Burger Shot • Firmensoftware</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body class="appBody">
+
+  <!-- ===== LOGIN PAGE (Startscreen) ===== -->
+  <div id="loginPage" class="loginPage">
+    <div class="loginShell">
+      <div class="loginBrand">
+        <img src="/logo.png" alt="Burger Shot" class="loginLogo" onerror="this.style.display='none'" />
+        <div class="loginTitle">Burger Shot</div>
+        <div class="loginSub">POS-System</div>
+      </div>
+
+      <div class="loginCard loginCardWide">
+        <h2 style="margin:0 0 10px 0;">Login</h2>
+        <div class="muted small" id="loginMsg" style="margin-bottom:10px;">Bitte einloggen.</div>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <input id="loginUser" class="input" placeholder="Username" autocomplete="username" />
+          <input id="loginPass" class="input" placeholder="Passwort" type="password" autocomplete="current-password" />
+          <button class="primary" onclick="login()">Einloggen</button>
+        </div>
+
+        <div class="muted small" style="margin-top:10px;">
+          Tipp: Desktop only ✅
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== APP (Hidden until logged in) ===== -->
+  <div id="appRoot" class="appRoot hidden">
+
+    <!-- ===== BRAND HEADER (Logo + Burgershot) ===== -->
+    <div class="brandHeader" aria-label="Burger Shot" style="justify-content:space-between;">
+      <div style="width:120px;"></div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/logo.png" alt="Burger Shot" class="brandLogo" onerror="this.style.display='none'" />
+        <div class="brandText">BURGERSHOT</div>
+      </div>
+      <div id="headerClock" style="width:120px; text-align:right; line-height:1.3;">
+        <div style="font-weight:900; font-size:16px; letter-spacing:.5px;" id="headerTime">—</div>
+        <div style="font-size:11px; opacity:.65;" id="headerDate">—</div>
+      </div>
+    </div>
+
+    <!-- ===== RETRO TOP BAR (matches Vorlage) ===== -->
+    <div class="retroTop">
+      <div class="registerBar" aria-label="Kassen">
+          <button class="regBtn" onclick="setRegister(1); activateRegBtn(this)">
+            <img src="/icons/kasse.png" alt="Kasse" />
+            <span class="regNo">1</span>
+          </button>
+          <button class="regBtn" onclick="setRegister(2); activateRegBtn(this)">
+            <img src="/icons/kasse.png" alt="Kasse" />
+            <span class="regNo">2</span>
+          </button>
+          <button class="regBtn" onclick="setRegister(3); activateRegBtn(this)">
+            <img src="/icons/kasse.png" alt="Kasse" />
+            <span class="regNo">3</span>
+          </button>
+          <button class="regBtn" onclick="setRegister(4); activateRegBtn(this)">
+            <img src="/icons/kasse.png" alt="Kasse" />
+            <span class="regNo">4</span>
+          </button>
+        </div>
+
+        
+      <div class="retroRight">
+        <!-- Back to POS / Kasse (always visible) -->
+        <button class="iconBtn" onclick="openTab('tab_pos', null)" id="iconBtnPos" title="Kasse">
+          <img src="/icons/kasse.png" alt="Kasse" />
+          <span>Kasse</span>
+        </button>
+
+        <button class="iconBtn" onclick="openTab('tab_kitchen', null)" id="iconBtnKitchen" title="Küche">
+          <img src="/icons/kueche.png" alt="Küche" />
+          <span>Küche</span>
+        </button>
+
+        <button class="iconBtn" onclick="openTab('tab_board', null)" id="iconBtnBoard" title="Schwarzes Brett" style="position:relative;">
+          <img src="/icons/info.png" alt="Brett" />
+          <span>Brett</span>
+          <span id="boardBadge" style="display:none; position:absolute; top:4px; right:4px; background:#ef4444; color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; font-weight:900; line-height:16px; text-align:center;">!</span>
+        </button>
+
+        <button class="iconBtn" onclick="openTab('tab_shop', null)" id="iconBtnShop" title="Einkauf">
+          <img src="/icons/einkauf.png" alt="Einkauf" />
+          <span>Einkauf</span>
+        </button>
+
+        
+        <button class="iconBtn" onclick="openTab('tab_stock', null)" id="iconBtnStock" title="Lagerbestand" style="position:relative;">
+          <img src="/icons/lager.png" alt="Lager" />
+          <span>Lager</span>
+          <span id="stockBadge" class="hidden" style="
+            position:absolute; top:2px; right:2px;
+            background:#ef4444; color:#fff; font-size:10px; font-weight:900;
+            border-radius:99px; min-width:18px; height:18px;
+            display:flex; align-items:center; justify-content:center;
+            padding:0 4px; pointer-events:none;
+          "></span>
+        </button>
+
+        <button class="iconBtn" onclick="openTab('tab_day', null)" id="iconBtnDay" title="Tag">
+          <img src="/icons/tagesabrechnung.png" alt="Tag" />
+          <span>Tag</span>
+        </button>
+
+        <button class="iconBtn" onclick="openTab('tab_week', null)" id="iconBtnWeek" title="Woche">
+          <img src="/icons/wochenabrechnung.png" alt="Woche" />
+          <span>Woche</span>
+        </button>
+
+        <button class="iconBtn" onclick="openTab('tab_month', null)" id="iconBtnMonth" title="Monat">
+          <img src="/icons/monatsabrechnung.png" alt="Monat" />
+          <span>Monat</span>
+        </button>
+
+        <button class="iconBtn" onclick="openTab('tab_mgmt', null)" id="iconBtnMgmt" title="Management">
+          <img src="/icons/managment.png" alt="Management" />
+        </button>
+
+        <button class="logoutBtn" onclick="logout()">LOGOUT</button>
+      </div>
+
+      <div class="catBar" aria-label="Kategorien">
+          <button class="catBtn active" onclick="setCategory('Burger', this)">BURGER</button>
+          <button class="catBtn" onclick="setCategory('Beilagen', this)">SIDES</button>
+          <button class="catBtn" onclick="setCategory('Süßes', this)">DESSERT</button>
+          <button class="catBtn" onclick="setCategory('Getränke', this)">DRINKS</button>
+          <button class="catBtn" onclick="setCategory('Menü', this)">MENÜ</button>
+        </div>
+    </div>
+
+    <!-- ===== TAB: POS ===== -->
+    <div id="tab_pos" class="tabPage">
+      <div class="posNew">
+        <!-- LEFT: CART -->
+        <div class="panel posCartPanel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="font-weight:900; color:#1b1b1b;" id="counterTitle">—</div>
+            <button class="ghost" style="padding:4px 10px; border-color:rgba(0,0,0,.2); color:#1b1b1b;" onclick="toggleCart()">🍴</button>
+          </div>
+          <div class="posCartBody">
+            <div id="cart" class="cartRetro"></div>
+          </div>
+          <div style="border-top:1px solid rgba(0,0,0,.12); padding-top:10px; margin-top:10px;">
+            <div style="font-size:12px; color:#555;">Total</div>
+            <div style="font-weight:900; font-size:26px; color:#1b1b1b;" id="cartTotal">$0</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:12px;">
+            <button class="primary" style="width:100%; padding:10px;" onclick="openPay()">💳 Bezahlen</button>
+            <div style="display:flex; gap:6px;">
+              <button class="ghost" style="flex:1; border-color:rgba(0,0,0,.2); color:#1b1b1b; font-size:12px;" onclick="openStaffOrder()">👨‍🍳 Mitarbeiter</button>
+              <button class="ghost" style="flex:1; border-color:rgba(0,0,0,.2); color:#1b1b1b; font-size:12px;" onclick="openGuthabenPay()">💳 Guthaben</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: PRODUCTS -->
+        <div class="panel posProductsPanel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="font-weight:900;" id="screenTitle">—</div>
+            <div class="muted small" id="clockDisplay">—</div>
+          </div>
+          <div id="products" class="productsNew"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: KITCHEN ===== -->
+    <div id="tab_kitchen" class="tabPage hidden">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">Küche</div>
+            <div class="muted small">Offene Bestellungen</div>
+          </div>
+          <button class="ghost" onclick="resetKitchen()">Reset (Chef)</button>
+        </div>
+
+        <div id="kitchenOrders" class="kitchenGrid" style="margin-top:14px;"></div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: DAY REPORT ===== -->
+    <div id="tab_day" class="tabPage hidden">
+      <div class="panel">
+        <div class="printOnly" style="margin-bottom:12px;">
+          <div style="font-weight:900; font-size:20px;">BurgerShot — Tagesabrechnung</div>
+          <div class="muted small">Datum: <span id="dayPrintDate">—</span></div>
+          <div class="muted small" id="dayPrintClosed">—</div>
+        </div>
+
+        <div class="row" style="justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">Tagesabrechnung</div>
+            <div class="muted small">Chef only</div>
+            <div id="dayCloseStatus" class="muted small" style="margin-top:4px;">—</div>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            <input id="dayDate" class="input" type="date" style="width:180px;" />
+            <button class="ghost" onclick="setDayToToday()">Heute</button>
+            <button class="primary noPrint" onclick="loadDayReport()">Laden</button>
+            <button class="ghost noPrint" onclick="printDayReport()">PDF</button>
+            <button id="dayCloseBtn" class="primary noPrint" onclick="openCloseDay()">Tagesabschluss</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px; gap:10px; flex-wrap:wrap;">
+          <div class="panel" style="flex:1 1 180px;">
+            <div class="muted small">Umsatz</div>
+            <div style="font-weight:900; font-size:22px;" id="dayRevenue">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 180px;">
+            <div class="muted small">Einkaufskosten</div>
+            <div style="font-weight:900; font-size:22px; color:#ef4444;" id="dayPurchases">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 180px;">
+            <div class="muted small">Gewinn</div>
+            <div style="font-weight:900; font-size:22px; color:#22c55e;" id="dayProfit">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 180px;">
+            <div class="row" style="justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <div class="muted small">Kontostand</div>
+              <button class="ghost" style="padding:2px 8px; font-size:11px;" onclick="openBankEdit()">✏️</button>
+            </div>
+            <div style="font-weight:900; font-size:22px; color:#60a5fa;" id="bankBalance">—</div>
+          </div>
+        </div>
+
+        <!-- Nur Mitarbeiter -->
+        <div class="row" style="margin-top:14px;">
+          <div class="panel" style="width:100%;">
+            <div style="font-weight:900; margin-bottom:8px;">Mitarbeiter</div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Mitarbeiter</th>
+                  <th style="text-align:right;">Umsatz</th>
+                  <th style="text-align:right;">Trinkgeld</th>
+                  <th style="text-align:right;">💵 BAR</th>
+                  <th style="text-align:right;">Orders</th>
+                </tr>
+              </thead>
+              <tbody id="dayByEmployee"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== TAB: WEEK REPORT (KW) ===== -->
+    <div id="tab_week" class="tabPage hidden">
+      <div class="panel">
+        <div class="printOnly" style="margin-bottom:12px;">
+          <div style="font-weight:900; font-size:20px;">BurgerShot — Wochenabrechnung</div>
+          <div class="muted small">KW: <span id="weekPrintKW">—</span></div>
+          <div class="muted small">Zeitraum: <span id="weekPrintRange">—</span></div>
+        </div>
+
+        <div class="row" style="justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">Wochenabrechnung</div>
+            <div class="muted small">Chef only · Kalenderwoche</div>
+            <div id="weekRange" class="muted small" style="margin-top:4px;">—</div>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            <input id="weekKW" class="input" type="week" style="width:180px;" />
+            <button class="ghost" onclick="setWeekToThisKW()">Diese KW</button>
+            <button class="primary noPrint" onclick="loadWeekReport()">Laden</button>
+            <button class="ghost noPrint" id="weekPdfBtn" onclick="printWeekReport()">PDF</button>
+            <button class="primary noPrint" id="weekTipBtn" onclick="openTipPayout()">💰 Trinkgeld auszahlen</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px; gap:10px; flex-wrap:wrap;">
+          <div class="panel" style="flex:1 1 160px;">
+            <div class="muted small">Umsatz</div>
+            <div style="font-weight:900; font-size:22px;" id="weekRevenue">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 160px;">
+            <div class="muted small">Einkaufskosten</div>
+            <div style="font-weight:900; font-size:22px; color:#ef4444;" id="weekPurchases">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 160px;">
+            <div class="muted small">Gewinn</div>
+            <div style="font-weight:900; font-size:22px; color:#22c55e;" id="weekProfit">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 160px;">
+            <div class="muted small">Orders</div>
+            <div style="font-weight:900; font-size:22px;" id="weekOrders">—</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px;">
+          <div class="panel" style="width:100%;">
+            <div style="font-weight:900; margin-bottom:8px;">Mitarbeiter</div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Mitarbeiter</th>
+                  <th style="text-align:right;">Umsatz</th>
+                  <th style="text-align:right;">Trinkgeld</th>
+                  <th style="text-align:right;">Orders</th>
+                </tr>
+              </thead>
+              <tbody id="weekByEmployee"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== TAB: MONTH REPORT (Summe aus Wochen) ===== -->
+    <div id="tab_month" class="tabPage hidden">
+      <div class="panel">
+        <div class="printOnly" style="margin-bottom:12px;">
+          <div style="font-weight:900; font-size:20px;">BurgerShot — Monatsabrechnung</div>
+          <div class="muted small">Monat: <span id="monthPrintYM">—</span></div>
+          <div class="muted small">Enthaltene KW: <span id="monthPrintWeeks">—</span></div>
+        </div>
+
+        <div class="row" style="justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">Monatsabrechnung</div>
+            <div class="muted small">Chef only · Summe aus Wochenabrechnungen</div>
+            <div id="monthWeeksHint" class="muted small" style="margin-top:4px;">—</div>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            <input id="monthYM" class="input" type="month" style="width:180px;" />
+            <button class="ghost" onclick="setMonthToThisMonth()">Dieser Monat</button>
+            <button class="primary noPrint" onclick="loadMonthReport()">Laden</button>
+            <button class="ghost noPrint" onclick="printMonthReport()">PDF</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px; gap:10px; flex-wrap:wrap;">
+          <div class="panel" style="flex:1 1 160px;">
+            <div class="muted small">Umsatz</div>
+            <div style="font-weight:900; font-size:22px;" id="monthRevenue">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 160px;">
+            <div class="muted small">Einkaufskosten</div>
+            <div style="font-weight:900; font-size:22px; color:#ef4444;" id="monthPurchases">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 160px;">
+            <div class="muted small">Gewinn</div>
+            <div style="font-weight:900; font-size:22px; color:#22c55e;" id="monthProfit">—</div>
+          </div>
+          <div class="panel" style="flex:1 1 160px;">
+            <div class="muted small">Orders</div>
+            <div style="font-weight:900; font-size:22px;" id="monthOrders">—</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px;">
+          <div class="panel" style="width:100%;">
+            <div style="font-weight:900; margin-bottom:8px;">Mitarbeiter</div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Mitarbeiter</th>
+                  <th style="text-align:right;">Umsatz</th>
+                  <th style="text-align:right;">Trinkgeld</th>
+                  <th style="text-align:right;">Orders</th>
+                </tr>
+              </thead>
+              <tbody id="monthByEmployee"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== TAB: STOCK / LAGER ===== -->
+    <div id="tab_board" class="tabPage hidden">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">📋 Schwarzes Brett</div>
+            <div class="muted small">Infos für alle Mitarbeiter</div>
+          </div>
+          <button class="primary" onclick="openNewPost()">+ Neuer Beitrag</button>
+        </div>
+      </div>
+      <div id="boardPosts" style="margin-top:14px;"></div>
+    </div>
+
+    <div id="tab_stock" class="tabPage hidden">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">Lagerbestand</div>
+            <div class="muted small" id="lagerSubtitle">Lagerbestand</div>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            <button class="ghost" onclick="loadInventory()">Refresh</button>
+            <button class="primary" id="lagerAddBtn" onclick="openInventoryEditor(null)">+ Artikel</button>
+            <button class="ghost noPrint" onclick="printInventory()">PDF</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:14px; gap:10px; flex-wrap:wrap;">
+          <div class="panel" style="flex:1 1 360px;">
+            <div class="muted small">Einkaufsliste (unter Mindestbestand)</div>
+            <div id="inventoryLowList" style="margin-top:8px;" class="muted small">—</div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:14px; overflow:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Artikel</th>
+                <th>Einheit</th>
+                <th style="text-align:right;">Bestand</th>
+                <th style="text-align:right;">Mindest</th>
+                <th class="noPrint" style="text-align:right;">Aktion</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryBody"></tbody>
+          </table>
+        </div>
+
+        <div class="muted small" style="margin-top:10px;">Tipp: Klick auf „Bearbeiten“ um Namen/Einheit/Mindestbestand zu ändern.</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: EINKAUF ===== -->
+    <div id="tab_shop" class="tabPage hidden">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">Einkaufen</div>
+            <div class="muted small">Chef only · Mengen eintragen und als Einkauf buchen</div>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+            <button class="ghost" onclick="loadShopTab()">Refresh</button>
+            <button class="primary" onclick="bookShopPurchases()">Einkauf buchen</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div class="muted small">Datum</div>
+            <input id="shopDate" class="input" type="date" style="width:180px;" />
+          </div>
+          <div class="muted small" id="shopMsg" style="margin-left:auto;">—</div>
+        </div>
+
+        <div class="panel" style="margin-top:14px; overflow:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Artikel</th>
+                <th>Einheit</th>
+                <th style="text-align:right;">Bestand</th>
+                <th style="text-align:right;">Mindest</th>
+                <th style="text-align:right; width:140px;">Menge einkaufen</th>
+                <th style="text-align:right; width:130px;">EK-Preis/Einheit</th>
+                <th style="text-align:right; width:110px;">Summe</th>
+              </tr>
+            </thead>
+            <tbody id="shopBody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6" style="text-align:right; font-weight:900; padding-top:10px;">Gesamt:</td>
+                <td style="text-align:right; font-weight:900; padding-top:10px;" id="shopTotal">$0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="muted small" style="margin-top:10px;">Tipp: Trage nur Mengen ein, die du wirklich gekauft hast. Leere Felder werden ignoriert.</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: MANAGEMENT ===== -->
+    <div id="tab_mgmt" class="tabPage hidden">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">Management</div>
+            <div class="muted small">Chef only</div>
+          </div>
+        </div>
+
+        <div class="panel" id="panel_mgmtMitarbeiter" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSection('mgmtMitarbeiter')">
+            <div style="font-weight:900;">Mitarbeiter</div>
+            <span id="mgmtMitarbeiterArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="mgmtMitarbeiter" class="hidden">
+            <div style="margin-top:10px;">
+              <button class="primary" onclick="openAddUser()">+ Add</button>
+            </div>
+            <div id="usersList" style="margin-top:10px;"></div>
+          </div>
+        </div>
+
+        <div class="panel" id="panel_vkPreise" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; cursor:pointer;" onclick="toggleSection('vkPreise'); if(!document.getElementById('vkPreise').classList.contains('hidden')) mgmtReloadProducts();">
+            <div>
+              <div style="font-weight:900;">VK-Preise (Items)</div>
+              <div class="muted small">Speichert im Browser (LocalStorage).</div>
+            </div>
+            <span id="vkPreiseArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="vkPreise" class="hidden">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+              <button class="ghost" onclick="mgmtReloadProducts()">Neu laden</button>
+              <button class="ghost" onclick="mgmtResetProducts()">Reset</button>
+              <button class="primary" onclick="mgmtSaveProducts()">Speichern</button>
+            </div>
+            <div class="muted small" id="mgmtProductsMsg" style="margin-top:10px;">—</div>
+            <div style="margin-top:10px; overflow:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Produkt</th>
+                    <th>Kategorie</th>
+                    <th style="text-align:right;">VK</th>
+                  </tr>
+                </thead>
+                <tbody id="mgmtProductsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lager-Zuordnung -->
+        <div class="panel" id="panel_lagerZuordnung" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; cursor:pointer;" onclick="toggleSection('lagerZuordnung'); if(!document.getElementById('lagerZuordnung').classList.contains('hidden')) loadStockLinks();">
+            <div>
+              <div style="font-weight:900;">Lager-Zuordnung</div>
+              <div class="muted small">Welcher Lagerartikel wird pro Verkauf abgezogen?</div>
+            </div>
+            <span id="lagerZuordnungArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="lagerZuordnung" class="hidden">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+              <button class="primary" onclick="openAddStockLink()">+ Zuordnung</button>
+              <button class="primary" onclick="saveStockLinks()">Speichern</button>
+            </div>
+            <div class="muted small" id="stockLinksMsg" style="margin-top:10px;">—</div>
+            <div style="margin-top:10px; overflow:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Produkt</th>
+                    <th>Lagerartikel</th>
+                    <th style="text-align:right;">Menge/Stk</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="stockLinksBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guthaben Karten -->
+        <div class="panel" id="panel_guthabenKarten" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSection('guthabenKarten'); if(!document.getElementById('guthabenKarten').classList.contains('hidden')) loadGuthabenKarten();">
+            <div>
+              <div style="font-weight:900;">💳 Guthaben Karten</div>
+              <div class="muted small">Guthaben aufladen und verwalten</div>
+            </div>
+            <span id="guthabenKartenArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="guthabenKarten" class="hidden">
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; align-items:flex-end;">
+              <div style="flex:1; min-width:160px;">
+                <div class="muted small">Name</div>
+                <input id="guthabenName" class="input" type="text" placeholder="z.B. Max Mustermann" style="margin-top:4px;" />
+              </div>
+              <div style="flex:0 0 130px;">
+                <div class="muted small">Betrag ($)</div>
+                <input id="guthabenBetrag" class="input" type="number" min="1" step="1" placeholder="z.B. 500" style="margin-top:4px;" />
+              </div>
+              <button class="primary" onclick="saveGuthabenKarte()">Aufladen</button>
+            </div>
+            <div class="muted small" id="guthabenMsg" style="margin-top:8px;">—</div>
+            <div style="margin-top:12px; overflow:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th style="text-align:right;">Guthaben</th>
+                    <th>Zuletzt geändert</th>
+                  </tr>
+                </thead>
+                <tbody id="guthabenKartenBody"><tr><td colspan="3" class="muted small">—</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mitarbeiter-Umsatz -->
+        <div class="panel" id="panel_mitarbeiterUmsatz" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSection('mitarbeiterUmsatz'); if(!document.getElementById('mitarbeiterUmsatz').classList.contains('hidden')) loadMitarbeiterUmsatz();">
+            <div>
+              <div style="font-weight:900;">📊 Mitarbeiter-Umsatz</div>
+              <div class="muted small">Gesamtumsatz je Mitarbeiter (alle Zeiten)</div>
+            </div>
+            <span id="mitarbeiterUmsatzArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="mitarbeiterUmsatz" class="hidden">
+            <div style="margin-top:10px; overflow:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Mitarbeiter</th>
+                    <th style="text-align:right;">Umsatz</th>
+                    <th style="text-align:right;">Bestellungen</th>
+                    <th style="text-align:right;">Ø pro Bestellung</th>
+                  </tr>
+                </thead>
+                <tbody id="mitarbeiterUmsatzBody"><tr><td colspan="4" class="muted small">—</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bestseller -->
+        <div class="panel" id="panel_bestseller" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSection('bestseller'); if(!document.getElementById('bestseller').classList.contains('hidden')) loadBestseller();">
+            <div>
+              <div style="font-weight:900;">🏆 Bestseller</div>
+              <div class="muted small">Meistverkaufte Artikel (alle Zeiten)</div>
+            </div>
+            <span id="bestsellerArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="bestseller" class="hidden">
+            <div style="margin-top:10px; overflow:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Rang</th>
+                    <th>Artikel</th>
+                    <th style="text-align:right;">Verkauft</th>
+                    <th style="text-align:right;">Umsatz</th>
+                  </tr>
+                </thead>
+                <tbody id="bestsellerBody"><tr><td colspan="4" class="muted small">—</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mitarbeiter-Verzehr -->
+        <div class="panel" id="panel_staffConsumption" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSection('staffConsumption'); if(!document.getElementById('staffConsumption').classList.contains('hidden')) loadStaffConsumption();">
+            <div>
+              <div style="font-weight:900;">Mitarbeiter-Verzehr</div>
+              <div class="muted small">Was haben Mitarbeiter sich selbst verbucht?</div>
+            </div>
+            <span id="staffConsumptionArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="staffConsumption" class="hidden">
+            <div style="margin-top:10px;" id="staffConsumptionBody">
+              <div class="muted small">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kontostand-Verlauf -->
+        <div class="panel" id="panel_bankHistory" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSection('bankHistory'); if(!document.getElementById('bankHistory').classList.contains('hidden')) loadBankHistory();">
+            <div>
+              <div style="font-weight:900;">Kontostand-Verlauf</div>
+              <div class="muted small">Alle Kontostand-Änderungen</div>
+            </div>
+            <span id="bankHistoryArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="bankHistory" class="hidden">
+            <div style="margin-top:10px; overflow:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Datum</th>
+                    <th style="text-align:right;">Kontostand</th>
+                    <th style="text-align:right;">Änderung</th>
+                    <th>Notiz</th>
+                    <th>Geändert von</th>
+                  </tr>
+                </thead>
+                <tbody id="bankHistoryBody"><tr><td colspan="5" class="muted small">—</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trinkgeld Auszahlungshistorie -->
+        <div class="panel" id="panel_tipPayouts" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSection('tipPayouts'); if(!document.getElementById('tipPayouts').classList.contains('hidden')) loadTipPayouts();">
+            <div>
+              <div style="font-weight:900;">Trinkgeld-Auszahlungen</div>
+              <div class="muted small">Protokoll aller Auszahlungen</div>
+            </div>
+            <span id="tipPayoutsArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="tipPayouts" class="hidden">
+            <div style="margin-top:10px; overflow:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Datum</th>
+                    <th>KW</th>
+                    <th>Mitarbeiter</th>
+                    <th style="text-align:right;">Betrag</th>
+                    <th>Ausgezahlt von</th>
+                  </tr>
+                </thead>
+                <tbody id="tipPayoutsBody"><tr><td colspan="5" class="muted small">—</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testphase Reset -->
+        <div class="panel" style="margin-top:14px; border:2px solid #ef4444;">
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:900; color:#ef4444;">⚠️ Testdaten löschen</div>
+              <div class="muted small">Löscht alle Verkäufe, Einkäufe, Trinkgelder und Tagesabschlüsse. Lager & Mitarbeiter bleiben erhalten.</div>
+            </div>
+            <button class="ghost" style="border-color:#ef4444; color:#ef4444;" onclick="resetAllData()">Alles zurücksetzen</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== ADD STOCK LINK OVERLAY ===== -->
+  <div id="addStockLinkOverlay" class="overlay hidden">
+    <div class="overlayCard" style="max-width:480px;">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">Zuordnung hinzufügen</div>
+        <button class="ghost" onclick="closeAddStockLink()">X</button>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="muted small">Produkt</div>
+        <select id="slProductId" class="input" style="width:100%;"></select>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="muted small">Lagerartikel</div>
+        <select id="slInventoryId" class="input" style="width:100%;"></select>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="muted small">Menge pro Verkauf</div>
+        <input id="slQty" class="input" type="number" step="0.01" min="0.01" value="1" style="width:100%;" />
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="ghost" onclick="closeAddStockLink()">Abbrechen</button>
+        <button class="primary" onclick="confirmAddStockLink()">Hinzufügen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GUTHABEN PAY OVERLAY ===== -->
+  <div id="guthabenPayOverlay" class="overlay hidden">
+    <div class="overlayCard" style="max-width:420px;">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">💳 Mit Guthaben bezahlen</div>
+        <button class="ghost" onclick="closeGuthabenPay()">X</button>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="muted small">Name auf der Karte</div>
+        <div style="position:relative; margin-top:6px;">
+          <input id="guthabenPayName" class="input" type="text" placeholder="Anfangsbuchstabe eingeben..." style="width:100%;" oninput="onGuthabenSearch()" autocomplete="off" />
+          <div id="guthabenPaySuggestions" style="position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:99; background:#1e3a5a; border:1px solid var(--border); border-radius:8px; max-height:200px; overflow-y:auto; box-shadow:0 8px 24px rgba(0,0,0,.4);"></div>
+        </div>
+      </div>
+      <div id="guthabenPayInfo" style="margin-top:12px; padding:12px; background:rgba(255,255,255,.05); border-radius:8px; display:none;">
+        <div class="muted small">Guthaben verfügbar</div>
+        <div style="font-weight:900; font-size:22px; color:#22c55e;" id="guthabenPayBalance">—</div>
+        <div style="margin-top:8px;" id="guthabenPaySummary" class="muted small">—</div>
+      </div>
+      <div id="guthabenPayMsg" class="muted small" style="margin-top:8px;">—</div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="ghost" onclick="closeGuthabenPay()">Abbrechen</button>
+        <button class="primary" id="guthabenPayBtn" onclick="confirmGuthabenPay()" disabled>Bezahlen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TIP PAYOUT OVERLAY ===== -->
+  <div id="tipPayoutOverlay" class="overlay hidden">
+    <div class="overlayCard" style="max-width:480px;">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">💰 Trinkgeld auszahlen</div>
+        <button class="ghost" onclick="closeTipPayout()">X</button>
+      </div>
+      <div class="muted small" style="margin-top:6px;" id="tipPayoutWeekLabel">—</div>
+      <div style="margin-top:12px; overflow:auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Mitarbeiter</th>
+              <th style="text-align:right;">Trinkgeld</th>
+              <th style="text-align:right;">Auszahlen</th>
+            </tr>
+          </thead>
+          <tbody id="tipPayoutBody"></tbody>
+        </table>
+      </div>
+      <div class="muted small" style="margin-top:10px;" id="tipPayoutMsg">—</div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="ghost" onclick="closeTipPayout()">Abbrechen</button>
+        <button class="primary" onclick="confirmTipPayout()">Auszahlung bestätigen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BANK BALANCE OVERLAY ===== -->
+  <div id="bankOverlay" class="overlay hidden">
+    <div class="overlayCard" style="max-width:380px;">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">Kontostand aktualisieren</div>
+        <button class="ghost" onclick="closeBankEdit()">X</button>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="muted small">Aktueller Kontostand ($)</div>
+        <input id="bankInput" class="input" type="number" step="0.01" placeholder="z.B. 12500.00" style="width:100%; margin-top:6px;" />
+      </div>
+      <div style="margin-top:10px;">
+        <div class="muted small">Notiz (optional)</div>
+        <input id="bankNote" class="input" type="text" placeholder="z.B. Wochenumsatz eingegangen" style="width:100%; margin-top:6px;" />
+      </div>
+      <div class="muted small" style="margin-top:8px;" id="bankMsg">—</div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="ghost" onclick="closeBankEdit()">Abbrechen</button>
+        <button class="primary" onclick="saveBankBalance()">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STAFF ORDER OVERLAY ===== -->
+  <div id="staffOrderOverlay" class="overlay hidden">
+    <div class="overlayCard" style="max-width:400px;">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">👨‍🍳 Mitarbeiter-Verzehr</div>
+        <button class="ghost" onclick="closeStaffOrder()">X</button>
+      </div>
+      <div class="muted small" style="margin-top:8px;">Kostenlos — wird nur für den Lagerbestand gebucht.</div>
+      <div style="margin-top:12px;">
+        <div class="muted small">Mitarbeiter</div>
+        <select id="staffOrderEmployee" class="input" style="width:100%; margin-top:6px;"></select>
+      </div>
+      <div style="margin-top:10px; max-height:200px; overflow:auto; border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:8px;" id="staffOrderItems"></div>
+      <div class="muted small" style="margin-top:10px;" id="staffOrderMsg">—</div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="ghost" onclick="closeStaffOrder()">Abbrechen</button>
+        <button class="primary" onclick="confirmStaffOrder()">Buchen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAY OVERLAY ===== -->
+  <div id="payOverlay" class="overlay hidden">
+    <div class="overlayCard">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">Bezahlen</div>
+        <button class="ghost" onclick="closePay()">X</button>
+      </div>
+
+      <!-- Rabatt -->
+      <div style="margin-top:12px;">
+        <div class="muted small" style="margin-bottom:6px;">Rabatt</div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="discountBtn" onclick="applyDiscount(0)" id="discBtn0">Kein Rabatt</button>
+          <button class="discountBtn" onclick="applyDiscount(15)" id="discBtn15">🚔 LSPD −15%</button>
+          <button class="discountBtn" onclick="applyDiscount(20)" id="discBtn20">🏥 LSMD −20%</button>
+          <button class="discountBtn" onclick="applyDiscount(10)" id="discBtn10">⚖️ DOJ −10%</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px; padding:10px; background:rgba(255,255,255,.05); border-radius:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="muted small">Originalbetrag</span>
+          <span id="payOriginal">$0</span>
+        </div>
+        <div id="payDiscountRow" style="display:none; justify-content:space-between; align-items:center; margin-top:4px;">
+          <span class="muted small" id="payDiscountLabel">Rabatt</span>
+          <span style="color:#22c55e; font-weight:900;" id="payDiscountAmt">−$0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; border-top:1px solid rgba(255,255,255,.1); padding-top:6px;">
+          <span style="font-weight:900;">Total</span>
+          <span style="font-weight:900; font-size:20px;" id="payTotal">$0</span>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Bezahlt</div>
+        <input id="payAmount" class="input" placeholder="z.B. 250" />
+      </div>
+
+      <div class="muted small" style="margin-top:8px;">Trinkgeld = Bezahlt − Total</div>
+
+      <label style="display:flex; align-items:center; gap:10px; margin-top:12px; cursor:pointer; padding:10px; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.35); border-radius:8px;">
+        <input type="checkbox" id="payIsCash" style="width:18px; height:18px; cursor:pointer;" />
+        <div>
+          <div style="font-weight:900; color:#fbbf24;">💵 BAR-Zahlung</div>
+          <div class="muted small">Muss später aufs Konto umgebucht werden</div>
+        </div>
+      </label>
+
+      <button class="primary" style="margin-top:12px; width:100%;" onclick="submitPay()">OK</button>
+    </div>
+  </div>
+
+  <!-- ===== CHANGE PASSWORD OVERLAY ===== -->
+  <div id="pwOverlay" class="overlay hidden">
+    <div class="overlayCard">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">Passwort ändern</div>
+        <button class="ghost" onclick="closePwChange()">X</button>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Aktuelles Passwort</div>
+        <input id="pwOld" class="input" type="password" autocomplete="current-password" />
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Neues Passwort</div>
+        <input id="pwNew1" class="input" type="password" autocomplete="new-password" />
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Neues Passwort (wiederholen)</div>
+        <input id="pwNew2" class="input" type="password" autocomplete="new-password" />
+      </div>
+
+      <div class="muted small" id="pwMsg" style="margin-top:10px;">—</div>
+
+      <div class="row" style="margin-top:12px; justify-content:flex-end; gap:10px;">
+        <button class="ghost" onclick="closePwChange()">Abbrechen</button>
+        <button class="primary" onclick="submitPwChange()">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- ===== ADD USER OVERLAY (Boss only) ===== -->
+  <div id="addUserOverlay" class="overlay hidden">
+    <div class="overlayCard">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">Mitarbeiter hinzufügen</div>
+        <button class="ghost" onclick="closeAddUser()">X</button>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Username (Login)</div>
+        <input id="addUserUsername" class="input" placeholder="z.B. max.mustermann" autocomplete="off" />
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Anzeigename</div>
+        <input id="addUserDisplayName" class="input" placeholder="z.B. Max Mustermann" autocomplete="off" />
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Rolle</div>
+        <select id="addUserRole" class="input">
+          <option value="staff">Mitarbeiter (staff)</option>
+          <option value="manager">Leitender Angestellter (manager)</option>
+          <option value="boss">Chef (boss)</option>
+        </select>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Passwort</div>
+        <input id="addUserPassword" class="input" type="password" placeholder="Standard: admin" autocomplete="new-password" />
+      </div>
+
+      <div class="muted small" id="addUserMsg" style="margin-top:10px;">—</div>
+
+      <div class="row" style="margin-top:12px; justify-content:flex-end; gap:10px;">
+        <button class="ghost" onclick="closeAddUser()">Abbrechen</button>
+        <button class="primary" onclick="submitAddUser()">Erstellen</button>
+      </div>
+    </div>
+  </div>
+
+<!-- ===== DAY CLOSE OVERLAY ===== -->
+  <div id="dayCloseOverlay" class="overlay hidden">
+    <div class="overlayCard">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">Tagesabschluss</div>
+        <button class="ghost" onclick="closeDayClose()">X</button>
+      </div>
+
+      <div class="muted small" style="margin-top:8px;">Datum: <b id="dayCloseDateLabel">—</b></div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Kassenbestand Ist (optional)</div>
+        <input id="dayCashCount" class="input" placeholder="z.B. 5000" />
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="muted small">Notiz (optional)</div>
+        <input id="dayCloseNote" class="input" placeholder="z.B. Schicht 1 & 2 zusammen" />
+      </div>
+
+      <div class="muted small" id="dayCloseMsg" style="margin-top:10px;">—</div>
+
+      <div class="row" style="margin-top:12px; justify-content:flex-end; gap:10px;">
+        <button class="ghost" onclick="closeDayClose()">Abbrechen</button>
+        <button class="primary" onclick="submitDayClose()">Abschließen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js?v=1772155422"></script>
+
+  <!-- ===== MENU BUILDER (Drink + Cheesy Fries) ===== -->
+  <!-- BOARD POST OVERLAY -->
+  <div id="boardPostOverlay" class="overlay hidden">
+    <div class="overlayCard" style="max-width:500px;">
+      <div class="row" style="justify-content:space-between;">
+        <div style="font-weight:900;">📋 Neuer Beitrag</div>
+        <button class="ghost" onclick="closeBoardPost()">X</button>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="muted small">Titel</div>
+        <input id="boardPostTitle" class="input" placeholder="z.B. Achtung: Gerät defekt" style="width:100%; margin-top:6px;" />
+      </div>
+      <div style="margin-top:12px;">
+        <div class="muted small">Nachricht</div>
+        <textarea id="boardPostBody" class="input" rows="5" placeholder="Nachricht..." style="width:100%; margin-top:6px; resize:vertical;"></textarea>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="muted small">Priorität</div>
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <button class="boardPrioBtn active" id="prioBtnNormal" onclick="selectPrio('normal')">📌 Normal</button>
+          <button class="boardPrioBtn" id="prioBtnImportant" onclick="selectPrio('important')">⚠️ Wichtig</button>
+          <button class="boardPrioBtn" id="prioBtnUrgent" onclick="selectPrio('urgent')">🚨 Dringend</button>
+        </div>
+      </div>
+      <div id="boardPostMsg" class="muted small" style="margin-top:8px;">—</div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="ghost" onclick="closeBoardPost()">Abbrechen</button>
+        <button class="primary" onclick="submitBoardPost()">Veröffentlichen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GRUPPEN-MENÜ BUILDER ===== -->
+  <div id="groupMenuOverlay" class="overlay hidden">
+    <div class="overlayCard" style="max-width:560px; max-height:90vh; overflow-y:auto;">
+      <div class="row" style="justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-weight:900; font-size:18px;" id="groupMenuTitle">Menü zusammenstellen</div>
+          <div class="muted small" id="groupMenuDesc">—</div>
+        </div>
+        <button class="ghost" onclick="closeGroupMenu()">X</button>
+      </div>
+      <div id="groupBurgerSection" style="margin-top:16px;">
+        <div style="font-weight:900; margin-bottom:8px;">🍔 Burger <span class="muted small" id="groupBurgerCounter">0 / 0</span></div>
+        <div id="groupBurgerList" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+      </div>
+      <div id="groupFriesSection" style="margin-top:16px;">
+        <div style="font-weight:900; margin-bottom:8px;">🍟 Fries / Cheesy Fries / Onion Rings <span class="muted small" id="groupFriesCounter">0 / 0</span></div>
+        <div id="groupFriesList" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+      </div>
+      <div style="margin-top:16px;">
+        <div style="font-weight:900; margin-bottom:8px;">🥤 Getränke <span class="muted small" id="groupDrinkCounter">0 / 0</span></div>
+        <div id="groupDrinkList" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+      </div>
+      <div id="groupMenuMsg" class="muted small" style="margin-top:12px; min-height:18px;"></div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="ghost" onclick="closeGroupMenu()">Abbrechen</button>
+        <button class="primary" id="groupMenuConfirmBtn" onclick="confirmGroupMenu()" disabled>In den Warenkorb</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
