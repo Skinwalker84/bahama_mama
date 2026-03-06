@@ -3,10 +3,10 @@
 :root{
   --bg:#550058;
   --bg2:#660069;
-  --chrome1:#5a005e;
-  --chrome2:#3a003d;
-  --chrome3:#250028;
-  --text:#eef4ff;
+  --chrome1:#3a003d;
+  --chrome2:#220025;
+  --chrome3:#160018;
+  --text:#ffffff;
   --muted:#c9d7f0;
   --border:#9ab1d6;
   --shadow:0 10px 30px rgba(0,0,0,.35);
@@ -50,6 +50,7 @@ body{
   font-weight:1000;
   letter-spacing:1.2px;
   font-size:22px;
+  color:#ffffff;
   text-shadow:0 2px 0 rgba(0,0,0,.25);
 }
 
