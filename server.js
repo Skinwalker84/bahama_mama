@@ -170,7 +170,7 @@ const DEFAULT_PRODUCTS = [
   { id:"cosmopolitan",      name:"Cosmopolitan",         price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Cosmopolitan.png" },
   { id:"caipirinha",        name:"Caipirinha",           price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Caipirinha.png" },
   { id:"virgin_pina_colada",name:"Virgin Piña Colada",  price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Virgin_Pina_Colada.png",  alcoholFree:true },
-  { id:"magno_mojito",      name:"Magno Mojito",         price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Magno_Mojito_Zero.png",   alcoholFree:true },
+  { id:"magno_mojito",      name:"Mango Mojito",         price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Magno_Mojito_Zero.png",   alcoholFree:true },
   { id:"peach_passion",     name:"Peach Passion Fizz",  price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Peach_Passion_Fizz.png",  alcoholFree:true },
 
   // === DRINKS — Whiskey ===
