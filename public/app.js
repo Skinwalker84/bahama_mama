@@ -701,7 +701,7 @@ let PRODUCTS = [];
 function initProducts(){ hydrateProducts(); renderProducts(); }
 
 // bump version so newly added default items (e.g. Light drinks) appear even if older data was cached
-const PRODUCTS_STORAGE_KEY = "bs_products_v3";
+const PRODUCTS_STORAGE_KEY = "bs_products_v4";
 
 function loadProductsFromStorage(){
   try{
