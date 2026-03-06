@@ -169,10 +169,10 @@ const DEFAULT_PRODUCTS = [
   { id:"classic_mojito",    name:"Classic Mojito",       price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Classic_Mojito.png" },
   { id:"cosmopolitan",      name:"Cosmopolitan",         price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Cosmopolitan.png" },
   { id:"caipirinha",        name:"Caipirinha",           price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Caipirinha.png" },
+  { id:"tequila_sunrise",   name:"Tequila Sunrise",      price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Tequilla_Sunrise.png" },
   { id:"virgin_pina_colada",name:"Virgin Piña Colada",  price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Virgin_Pina_Colada.png",  alcoholFree:true },
   { id:"magno_mojito",      name:"Mango Mojito",         price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Magno_Mojito_Zero.png",   alcoholFree:true },
   { id:"peach_passion",     name:"Peach Passion Fizz",  price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Peach_Passion_Fizz.png",  alcoholFree:true },
-  { id:"tequila_sunrise",   name:"Tequila Sunrise",      price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Tequilla_Sunrise.png" },
 
   // === DRINKS — Whiskey ===
   { id:"manhattan",         name:"Manhattan",            price:14, cat:"Drinks", subcat:"Whiskey",    icon:"Manhattan.png" },
