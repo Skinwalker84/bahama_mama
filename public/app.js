@@ -1590,8 +1590,12 @@ const PRODUCT_ICON = {
   "Old Fashioned":     "Old_Fashioned.png",
   "Mumm (Sekt)":       "Mumm.png",
   "Dom Pérignon":      "Dom_Perignon.png",
-  "Tequila Shot":      "Tequilla_Sunrise.png",
+  "Tequila Shot":      "tequila_shot.png",
+  "Vodka Shot":        "vodka_shot.png",
   "Baguette":          "Baguette.png",
+  "Cheeseburger":      "burgershot_the_bleeder.png",
+  "Chicken Burger":    "burgershot_the_chicken.png",
+  "Vegan Burger":      "burger_the_vegan.png",
 };
 
 function getIconForProduct(p){

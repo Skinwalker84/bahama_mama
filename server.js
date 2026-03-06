@@ -13,13 +13,18 @@ const PORT = process.env.PORT || 3000;
 
 app.set("trust proxy", 1);
 
-// DB_PATH: Wenn RAILWAY_VOLUME_MOUNT_PATH gesetzt ist, wird das persistente Volume genutzt.
-// Sonst fallback auf lokales data/db.json (Entwicklung).
-const DB_PATH = process.env.DATA_FILE || process.env.DB_PATH
-  ? path.resolve(process.env.DATA_FILE || process.env.DB_PATH)
+// DB_PATH: DATA_FILE (Railway Volume) hat Vorrang, dann DB_PATH, dann lokales Fallback.
+const _envPath = process.env.DATA_FILE || process.env.DB_PATH || "";
+const DB_PATH = _envPath
+  ? path.resolve(_envPath)
   : path.join(__dirname, "data", "db.json");
 
 console.log("[DB] Pfad:", DB_PATH);
+
+// Sicherstellen, dass das Verzeichnis existiert (wichtig für Railway Volume beim ersten Start)
+try {
+  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+} catch(e) { /* ignore */ }
 
 /* =========================
    HELPERS
@@ -177,14 +182,14 @@ const DEFAULT_PRODUCTS = [
   { id:"dom_perignon",      name:"Dom Pérignon",         price:35, cat:"Drinks", subcat:"Schaumwein", icon:"Dom_Perignon.png" },
 
   // === DRINKS — Shots ===
-  { id:"vodka_shot",        name:"Vodka Shot",           price:6,  cat:"Drinks", subcat:"Shots" },
-  { id:"tequila_shot",      name:"Tequila Shot",         price:6,  cat:"Drinks", subcat:"Shots",      icon:"Tequilla_Sunrise.png" },
+  { id:"vodka_shot",        name:"Vodka Shot",           price:6,  cat:"Drinks", subcat:"Shots",      icon:"vodka_shot.png" },
+  { id:"tequila_shot",      name:"Tequila Shot",         price:6,  cat:"Drinks", subcat:"Shots",      icon:"tequila_shot.png" },
 
   // === FOOD ===
   { id:"baguette",          name:"Baguette",             price:12, cat:"Food",   icon:"Baguette.png" },
-  { id:"cheeseburger",      name:"Cheeseburger",         price:14, cat:"Food" },
-  { id:"chicken_burger",    name:"Chicken Burger",       price:14, cat:"Food" },
-  { id:"vegan_burger",      name:"Vegan Burger",         price:12, cat:"Food" }
+  { id:"cheeseburger",      name:"Cheeseburger",         price:14, cat:"Food",   icon:"burgershot_the_bleeder.png" },
+  { id:"chicken_burger",    name:"Chicken Burger",       price:14, cat:"Food",   icon:"burgershot_the_chicken.png" },
+  { id:"vegan_burger",      name:"Vegan Burger",         price:12, cat:"Food",   icon:"burger_the_vegan.png" }
 ];
 
 /* =========================
