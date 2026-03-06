@@ -197,7 +197,7 @@ body{
   align-items:center;
   justify-content:center;
   gap:2px;
-  color:#0b1f33;
+  color:#ffffff;
   font-weight:900;
 }
 .iconBtn img{ width:38px; height:38px; object-fit:contain; }
