@@ -258,29 +258,20 @@ function normalizeInventory(list){
 
 function normalizeProducts(list) {
   const arr = Array.isArray(list) ? list : [];
-  const out = [];
-  const seen = new Set();
 
+  // Build a map of saved prices from DB
+  const priceMap = new Map();
   for (const p of arr) {
     if (!p || typeof p !== "object") continue;
     const id = String(p.id || "").trim();
-    const name = String(p.name || "").trim();
-    const cat = String(p.cat || "").trim();
     const price = Number(p.price);
-    if (!id || !name || !cat) continue;
-    if (!Number.isFinite(price) || price < 0) continue;
-    if (seen.has(id)) continue;
-    seen.add(id);
-    const extra = {};
-    if (p.icon) extra.icon = String(p.icon);
-    if (p.desc) extra.desc = String(p.desc);
-    if (p.subcat) extra.subcat = String(p.subcat);
-    if (p.alcoholFree) extra.alcoholFree = true;
-    out.push({ id, name, cat, price: Math.round(price), ...extra });
+    if (id && Number.isFinite(price) && price >= 0) {
+      priceMap.set(id, Math.round(price));
+    }
   }
 
-  // Ensure defaults always exist and always have up-to-date extra fields
-  const map = new Map(out.map(p => [p.id, p]));
+  // Always use DEFAULT_PRODUCTS order — only take price from DB if saved
+  const result = [];
   for (const dp of DEFAULT_PRODUCTS) {
     if (!dp || typeof dp !== "object") continue;
     const id = String(dp.id || "").trim();
@@ -290,19 +281,10 @@ function normalizeProducts(list) {
     if (dp.desc) extra.desc = String(dp.desc);
     if (dp.subcat) extra.subcat = String(dp.subcat);
     if (dp.alcoholFree) extra.alcoholFree = true;
-    if (!map.has(id)) {
-      map.set(id, { id, name: dp.name, cat: dp.cat, price: Math.round(Number(dp.price) || 0), ...extra });
-    } else {
-      // Always sync extra fields from defaults
-      Object.assign(map.get(id), extra);
-    }
+    const price = priceMap.has(id) ? priceMap.get(id) : Math.round(Number(dp.price) || 0);
+    result.push({ id, name: dp.name, cat: dp.cat, price, ...extra });
   }
-  // Remove products that no longer exist in DEFAULT_PRODUCTS (e.g. renamed/deleted defaults)
-  const defaultIds = new Set(DEFAULT_PRODUCTS.map(p => String(p.id || "").trim()).filter(Boolean));
-  for (const [id] of map) {
-    if (!defaultIds.has(id)) map.delete(id);
-  }
-  return Array.from(map.values());
+  return result;
 }
 
 function normalizeDB(db) {
