@@ -1,7 +1,7 @@
-/* Burger Shot – App JS */
+/* Bahama Mama's – App JS */
 
 let currentRegister = null;
-let currentCategory = "Burger";
+let currentCategory = "Drinks";
 let me = null;
 let serverDay = null;
 
@@ -677,29 +677,22 @@ function activateRegBtn(btn){
 
 /* Products */
 const PRODUCTS_DEFAULT = [
-  { name: "The Bleeder", price: 14, cat: "Burger" },
-  { name: "The Heartstopper", price: 16, cat: "Burger" },
-  { name: "The Chicken", price: 12, cat: "Burger" },
-  { name: "Vegan Burger", price: 10, cat: "Burger" },
-  { name: "The Chozzo", price: 12, cat: "Burger" },
-  { name: "The German", price: 16, cat: "Burger" },
-  { name: "Coleslaw", price: 10, cat: "Beilagen" },
-  { name: "Fries", price: 6, cat: "Beilagen" },
-  { name: "Cheesy Fries", price: 8, cat: "Beilagen" },
-  { name: "Chicken Nuggets", price: 10, cat: "Beilagen" },
-  { name: "Onion Rings", price: 6, cat: "Beilagen" },
-  { name: "ECola", price: 8, cat: "Getränke" },
-  { name: "ECola Light", price: 8, cat: "Getränke" },
-  { name: "Sprunk", price: 8, cat: "Getränke" },
-  { name: "Sprunk Light", price: 8, cat: "Getränke" },
-  // legacy typo kept for compatibility with older saved data
-  { name: "Sprung", price: 8, cat: "Getränke" },
-  { name: "Slush", price: 10, cat: "Getränke" },
-  { name: "Milchshake", price: 10, cat: "Getränke" },
-  { name: "Donut", price: 8, cat: "Süßes" },
-  { name: "Caramel Sundae", price: 8, cat: "Süßes" },
-  { name: "Chocolate Sundae", price: 8, cat: "Süßes" },
-  { name: "Strawberry Sundae", price: 8, cat: "Süßes" },
+  { name: "Classic Mojito",    price: 12, cat: "Drinks", subcat: "Cocktails" },
+  { name: "Cosmopolitan",      price: 12, cat: "Drinks", subcat: "Cocktails" },
+  { name: "Caipirinha",        price: 12, cat: "Drinks", subcat: "Cocktails" },
+  { name: "Virgin Piña Colada",price: 8,  cat: "Drinks", subcat: "Cocktails" },
+  { name: "Magno Mojito",      price: 8,  cat: "Drinks", subcat: "Cocktails" },
+  { name: "Peach Passion Fizz",price: 8,  cat: "Drinks", subcat: "Cocktails" },
+  { name: "Manhattan",         price: 14, cat: "Drinks", subcat: "Whiskey" },
+  { name: "Old Fashioned",     price: 14, cat: "Drinks", subcat: "Whiskey" },
+  { name: "Mumm (Sekt)",       price: 16, cat: "Drinks", subcat: "Schaumwein" },
+  { name: "Dom Pérignon",      price: 35, cat: "Drinks", subcat: "Schaumwein" },
+  { name: "Vodka Shot",        price: 6,  cat: "Drinks", subcat: "Shots" },
+  { name: "Tequila Shot",      price: 6,  cat: "Drinks", subcat: "Shots" },
+  { name: "Baguette",          price: 12, cat: "Food" },
+  { name: "Cheeseburger",      price: 14, cat: "Food" },
+  { name: "Chicken Burger",    price: 14, cat: "Food" },
+  { name: "Vegan Burger",      price: 12, cat: "Food" },
 ];
 let PRODUCTS = [];
 
@@ -754,7 +747,7 @@ async function hydrateProducts(){
     if(res.ok){
       const data = await res.json().catch(()=>({}));
       if(data.success && Array.isArray(data.products) && data.products.length){
-        PRODUCTS = data.products.map(p=>({ id:p.id, name:p.name, cat:p.cat, price:Number(p.price)||0, icon:p.icon||null, desc:p.desc||null, groupSize:p.groupSize||null, chickenBox:p.chickenBox||false, donutBox:p.donutBox||false, germanBox:p.germanBox||false }));
+        PRODUCTS = data.products.map(p=>({ id:p.id, name:p.name, cat:p.cat, subcat:p.subcat||null, price:Number(p.price)||0, icon:p.icon||null, desc:p.desc||null, alcoholFree:p.alcoholFree||false }));
         saveProductsToStorage(PRODUCTS); // keep fallback in sync
         return;
       }
@@ -827,6 +820,8 @@ async function mgmtSaveProducts(){
       id: p.id || slugKey(p),
       name: p.name,
       cat: p.cat,
+      subcat: p.subcat || null,
+      icon: p.icon || null,
       price: p.price
     }));
     const res = await fetch("/products",{
@@ -837,7 +832,7 @@ async function mgmtSaveProducts(){
     const data = await res.json().catch(()=>({}));
     if(res.ok && data.success){
       if(Array.isArray(data.products) && data.products.length){
-        PRODUCTS = data.products.map(p=>({ id:p.id, name:p.name, cat:p.cat, price:Number(p.price)||0, icon:p.icon||null, desc:p.desc||null, groupSize:p.groupSize||null, chickenBox:p.chickenBox||false, donutBox:p.donutBox||false, germanBox:p.germanBox||false }));
+        PRODUCTS = data.products.map(p=>({ id:p.id, name:p.name, cat:p.cat, subcat:p.subcat||null, price:Number(p.price)||0, icon:p.icon||null, desc:p.desc||null, alcoholFree:p.alcoholFree||false }));
       }else{
         PRODUCTS = list;
       }
@@ -938,7 +933,7 @@ async function openAddStockLink(){
   const invSel = document.getElementById("slInventoryId");
   if(!prodSel || !invSel) return;
 
-  const allProds = (PRODUCTS||[]).filter(p => String(p.cat||"") !== "Menü");
+  const allProds = (PRODUCTS||[]);
   prodSel.innerHTML = allProds.map(p =>
     `<option value="${escAttr(p.id||p.name)}">${esc(p.name)} (${esc(p.cat)})</option>`
   ).join("");
@@ -1585,29 +1580,18 @@ function setCategory(cat, btn){
 }
 
 const PRODUCT_ICON = {
-  "The Bleeder": "burgershot_the_bleeder.png",
-  "The Heartstopper": "burgershot_heartstopper.png",
-  "The Chicken": "burgershot_the_chicken.png",
-  "Vegan Burger": "burger_the_vegan.png",
-  "The Chozzo": "burgershot_the_chozzo.png",
-  "The German": "burgershot_the_german.png",
-  "Coleslaw": "coleslaw.png",
-  "Fries": "burgershot_fries.png",
-  "Cheesy Fries": "burgershot_cheese_fries.png",
-  "Chicken Nuggets": "burgershot_nuggets.png",
-  "Onion Rings": "burgershot_onion_rings.png",
-  "ECola": "ECola.PNG",
-  "ECola Light": "ecola_light.png",
-  "Sprunk": "sprunk.jpeg",
-  "Sprunk Light": "sprunk_light.png",
-  // legacy typo
-  "Sprung": "sprunk.jpeg",
-  "Slush": "slush.png",
-  "Milchshake": "milchshake.png",
-  "Donut": "burgershot_donut.png",
-  "Caramel Sundae": "burgershot_sunday_caramel.png",
-  "Chocolate Sundae": "burgershot_sunday_chocolate.png",
-  "Strawberry Sundae": "burgershot_sunday_strawberry.png",
+  "Classic Mojito":    "Classic_Mojito.png",
+  "Cosmopolitan":      "Cosmopolitan.png",
+  "Caipirinha":        "Caipirinha.png",
+  "Virgin Piña Colada":"Virgin_Pina_Colada.png",
+  "Magno Mojito":      "Magno_Mojito_Zero.png",
+  "Peach Passion Fizz":"Peach_Passion_Fizz.png",
+  "Manhattan":         "Manhattan.png",
+  "Old Fashioned":     "Old_Fashioned.png",
+  "Mumm (Sekt)":       "Mumm.png",
+  "Dom Pérignon":      "Dom_Perignon.png",
+  "Tequila Shot":      "Tequilla_Sunrise.png",
+  "Baguette":          "Baguette.png",
 };
 
 function getIconForProduct(p){
@@ -1639,51 +1623,36 @@ function renderProducts(){
   box.innerHTML="";
   let list = PRODUCTS.filter(p=>p.cat===currentCategory);
 
-  // For Menü: regular menus top row, chicken boxes second row
-  if(currentCategory === "Menü" && list.some(p=>p.chickenBox)){
-    box.style.display = "flex";
-    box.style.flexWrap = "wrap";
-    box.style.alignContent = "start";
-    const regular = list.filter(p=>!p.chickenBox && !p.donutBox && !p.germanBox);
-    const chicken = list.filter(p=>p.chickenBox && !p.donutBox && !p.germanBox);
+  // Check if any products have subcategories
+  const hasSubcats = list.some(p => p.subcat);
 
-    if(regular.length){
-      const row1 = document.createElement("div");
-      row1.style.cssText = "display:flex; flex-wrap:wrap; gap:8px; width:100%;";
-      box.appendChild(row1);
-      renderProductList(regular, row1);
-    }
-    if(chicken.length){
-      const divider = document.createElement("div");
-      divider.style.cssText = "width:100%; border-top:1px solid var(--border); margin:10px 0 10px; flex-basis:100%;";
-      box.appendChild(divider);
-      const row2 = document.createElement("div");
-      row2.style.cssText = "display:flex; flex-wrap:wrap; gap:8px; width:100%;";
-      box.appendChild(row2);
-      renderProductList(chicken, row2);
-    }
-    const german = list.filter(p=>p.germanBox);
-    if(german.length){
-      const divider2 = document.createElement("div");
-      divider2.style.cssText = "width:100%; border-top:1px solid var(--border); margin:10px 0 10px;";
-      box.appendChild(divider2);
-      const row3 = document.createElement("div");
-      row3.style.cssText = "display:flex; flex-wrap:wrap; gap:8px; width:100%;";
-      box.appendChild(row3);
-      renderProductList(german, row3);
-    }
-    const donuts = list.filter(p=>p.donutBox);
-    if(donuts.length){
-      const divider3 = document.createElement("div");
-      divider3.style.cssText = "width:100%; border-top:1px solid var(--border); margin:10px 0 10px;";
-      box.appendChild(divider3);
-      const row4 = document.createElement("div");
-      row4.style.cssText = "display:flex; flex-wrap:wrap; gap:8px; width:100%;";
-      box.appendChild(row4);
-      renderProductList(donuts, row4);
-    }
+  if(hasSubcats){
+    box.style.display = "block";
+    box.style.flexWrap = "";
+    box.style.alignContent = "";
+    // Group by subcat, preserve order
+    const subcats = [];
+    const subcatMap = {};
+    list.forEach(p => {
+      const sc = p.subcat || "_none";
+      if(!subcatMap[sc]){ subcatMap[sc] = []; subcats.push(sc); }
+      subcatMap[sc].push(p);
+    });
+    subcats.forEach((sc, i) => {
+      if(sc !== "_none"){
+        const heading = document.createElement("div");
+        heading.style.cssText = "font-weight:900; font-size:13px; letter-spacing:1px; text-transform:uppercase; opacity:.6; margin:" + (i===0?"4px":"16px") + " 0 8px 2px;";
+        heading.textContent = sc;
+        box.appendChild(heading);
+      }
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex; flex-wrap:wrap; gap:8px; width:100%;";
+      box.appendChild(row);
+      renderProductList(subcatMap[sc], row);
+    });
     return;
   }
+
   box.style.display = "";
   box.style.flexWrap = "";
   box.style.alignContent = "";
@@ -1746,6 +1715,12 @@ function renderProductList(list, box){
     pr.className='dispPrice';
     pr.textContent=money(p.price);
     meta.appendChild(n);
+    if(p.alcoholFree){
+      const badge=document.createElement('div');
+      badge.style.cssText='font-size:9px; color:#4caf50; font-weight:700; letter-spacing:.5px; margin-top:2px; text-align:center;';
+      badge.textContent='ALKOHOLFREI';
+      meta.appendChild(badge);
+    }
     if(p.desc){
       const desc=document.createElement('div');
       desc.style.cssText='font-size:10px; color:var(--muted); line-height:1.3; margin-top:2px; text-align:center;';
@@ -1815,23 +1790,6 @@ function pulseCart(){
 
 /* Cart */
 function addToCart(p){
-  if(String(p?.cat||p?.category||"")==="Menü"){
-    if(p.germanBox){
-      openGroupMenu(p);
-      return;
-    }
-    if(p.donutBox){
-      // No selection needed — just add qty of donuts
-      const size = p.groupSize || 1;
-      const displayName = `${p.name} | 🍩 ${size}× Donut`;
-      cart.push({ name: displayName, price: p.price, qty:1, productId: p.id,
-        components:[{ productId:"donut", qty: size }] });
-      renderCart(); saveCartsDebounced(); sendPresencePing(); renderPresenceWarning();
-      return;
-    }
-    openGroupMenu(p);
-    return;
-  }
   const productId = p.id || (PRODUCTS||[]).find(x=>x.name===p.name)?.id || slugKey(p);
   // Merge with existing cart item if same product
   const existing = cart.find(x => x.productId === productId && !x.components);
@@ -2249,7 +2207,7 @@ async function kitchenDone(id){
 
 async function resetKitchen(){
   if(!isBoss()) return alert("Nur Chef.");
-  if(!confirm("Küche für heute resetten?")) return;
+  if(!confirm("Bestellungen für heute resetten?")) return;
   const res=await fetch("/kitchen/reset",{ method:"POST" });
   const data=await res.json().catch(()=>({}));
   if(!res.ok || !data.success) return alert(data.message || "Fehler.");
@@ -2521,7 +2479,7 @@ async function refreshStats(){
 
 async function resetToday(){
   if(!isBoss()) return alert("Nur Chef.");
-  if(!confirm("ACHTUNG: Alle heutigen Verkäufe + Küche löschen?")) return;
+  if(!confirm("ACHTUNG: Alle heutigen Verkäufe + Bestellungen löschen?")) return;
   const res=await fetch("/reset/today",{ method:"POST" });
   const data=await res.json().catch(()=>({}));
   if(!res.ok || !data.success) return alert(data.message || "Fehler.");

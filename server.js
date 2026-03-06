@@ -1,5 +1,5 @@
 // server.js
-// Burger Shot – Firmensoftware (GTA RP)
+// Bahama Mama's – Firmensoftware (GTA RP)
 // Auth, POS Sales, Küche, Management, Reports (Tag/Woche), Tagesabschluss
 // Persistenz via JSON + editierbare Produktpreise (VK)
 
@@ -160,54 +160,31 @@ function makeToken() {
    DEFAULT PRODUCTS (VK)
    ========================= */
 const DEFAULT_PRODUCTS = [
-  { id:"bleeder", name:"The Bleeder", price:14, cat:"Burger" },
-  { id:"heartstopper", name:"The Heartstopper", price:16, cat:"Burger" },
-  { id:"chicken", name:"The Chicken", price:12, cat:"Burger" },
-  { id:"vegan_burger", name:"Vegan Burger", price:10, cat:"Burger" },
-  { id:"chozzo", name:"The Chozzo", price:12, cat:"Burger" },
-  { id:"german", name:"The German", price:16, cat:"Burger" },
+  // === DRINKS — Cocktails ===
+  { id:"classic_mojito",    name:"Classic Mojito",       price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Classic_Mojito.png" },
+  { id:"cosmopolitan",      name:"Cosmopolitan",         price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Cosmopolitan.png" },
+  { id:"caipirinha",        name:"Caipirinha",           price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Caipirinha.png" },
+  { id:"virgin_pina_colada",name:"Virgin Piña Colada",  price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Virgin_Pina_Colada.png",  alcoholFree:true },
+  { id:"magno_mojito",      name:"Magno Mojito",         price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Magno_Mojito_Zero.png",   alcoholFree:true },
+  { id:"peach_passion",     name:"Peach Passion Fizz",  price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Peach_Passion_Fizz.png",  alcoholFree:true },
 
-  { id:"coleslaw", name:"Coleslaw", price:10, cat:"Beilagen" },
-  { id:"fries", name:"Fries", price:6, cat:"Beilagen" },
-  { id:"cheesy_fries", name:"Cheesy Fries", price:8, cat:"Beilagen" },
-  { id:"chicken_nuggets", name:"Chicken Nuggets", price:10, cat:"Beilagen" },
-  { id:"onion_rings", name:"Onion Rings", price:6, cat:"Beilagen" },
+  // === DRINKS — Whiskey ===
+  { id:"manhattan",         name:"Manhattan",            price:14, cat:"Drinks", subcat:"Whiskey",    icon:"Manhattan.png" },
+  { id:"old_fashioned",     name:"Old Fashioned",        price:14, cat:"Drinks", subcat:"Whiskey",    icon:"Old_Fashioned.png" },
 
-  { id:"ecola", name:"ECola", price:8, cat:"Getränke" },
-  { id:"ecola_light", name:"ECola Light", price:8, cat:"Getränke" },
-  { id:"sprunk", name:"Sprunk", price:8, cat:"Getränke" },
-  { id:"sprunk_light", name:"Sprunk Light", price:8, cat:"Getränke" },
-  { id:"slush", name:"Slush", price:10, cat:"Getränke" },
-  { id:"milchshake", name:"Milchshake", price:10, cat:"Getränke" },
+  // === DRINKS — Schaumwein ===
+  { id:"mumm",              name:"Mumm (Sekt)",          price:16, cat:"Drinks", subcat:"Schaumwein", icon:"Mumm.png" },
+  { id:"dom_perignon",      name:"Dom Pérignon",         price:35, cat:"Drinks", subcat:"Schaumwein", icon:"Dom_Perignon.png" },
 
-  { id:"donut", name:"Donut", price:8, cat:"Süßes" },
-  { id:"caramel_sundae", name:"Caramel Sundae", price:8, cat:"Süßes" },
-  { id:"chocolate_sundae", name:"Chocolate Sundae", price:8, cat:"Süßes" },
-  { id:"strawberry_sundae", name:"Strawberry Sundae", price:8, cat:"Süßes" },
+  // === DRINKS — Shots ===
+  { id:"vodka_shot",        name:"Vodka Shot",           price:6,  cat:"Drinks", subcat:"Shots" },
+  { id:"tequila_shot",      name:"Tequila Shot",         price:6,  cat:"Drinks", subcat:"Shots",      icon:"Tequilla_Sunrise.png" },
 
-  // Gruppen-Menüs
-  { id:"menu_small",   name:"Small Menü",       price:28,  cat:"Menü", icon:"small.png",       groupSize:1,  desc:"1× Burger, Fries/Cheesy Fries & Getränk" },
-  { id:"menu_medium",  name:"Medium Menü",      price:54,  cat:"Menü", icon:"medium.png",      groupSize:2,  desc:"2× Burger, Fries/Cheesy Fries & Getränk" },
-  { id:"menu_large",   name:"Large Menü",       price:129, cat:"Menü", icon:"large.png",       groupSize:5,  desc:"5× Burger, Fries/Cheesy Fries & Getränk" },
-  { id:"menu_xlarge",  name:"X-tra Large Menü", price:245, cat:"Menü", icon:"xl.png", groupSize:10, desc:"10× Burger, Fries/Cheesy Fries & Getränk" },
-
-  // Chicken Boxes — fixer Chicken Burger + Nuggets, nur Getränk wählbar
-  { id:"cbox_small",  name:"Chicken Box Small",       price:28,  cat:"Menü", icon:"chicken_small.png",  groupSize:1,  chickenBox:true, desc:"1× Chicken Burger, 1× Nuggets Box, 1 Getränk" },
-  { id:"cbox_medium", name:"Chicken Box Medium",      price:55,  cat:"Menü", icon:"chicken_medium.png", groupSize:2,  chickenBox:true, desc:"2× Chicken Burger, 2× Nuggets Box, 2 Getränke" },
-  { id:"cbox_large",  name:"Chicken Box Large",       price:135, cat:"Menü", icon:"chicken_large.png",  groupSize:5,  chickenBox:true, desc:"5× Chicken Burger, 5× Nuggets Box, 5 Getränke" },
-  { id:"cbox_xl",     name:"Chicken Box X-tra Large", price:265, cat:"Menü", icon:"chicken_xl.png",     groupSize:10, chickenBox:true, desc:"10× Chicken Burger, 10× Nuggets Box, 10 Getränke" },
-
-  // German Special — fixer German + Coleslaw, nur Getränk wählbar
-  { id:"gbox_small",  name:"German Special Small",       price:32,  cat:"Menü", icon:"german_small.png",  groupSize:1,  germanBox:true, desc:"1× The German, 1× Coleslaw, 1 Getränk" },
-  { id:"gbox_medium", name:"German Special Medium",      price:63,  cat:"Menü", icon:"german_medium.png", groupSize:2,  germanBox:true, desc:"2× The German, 2× Coleslaw, 2 Getränke" },
-  { id:"gbox_large",  name:"German Special Large",       price:158, cat:"Menü", icon:"german_large.png",  groupSize:5,  germanBox:true, desc:"5× The German, 5× Coleslaw, 5 Getränke" },
-  { id:"gbox_xl",     name:"German Special X-tra Large", price:315, cat:"Menü", icon:"german_xl.png",     groupSize:10, germanBox:true, desc:"10× The German, 10× Coleslaw, 10 Getränke" },
-
-  // Donut Boxes — nur Anzahl, keine Auswahl
-  { id:"dbox_small",  name:"Donut Box Small",       price:30,  cat:"Menü", icon:"donut_box.png", donutBox:true, groupSize:4,  desc:"4× Donut" },
-  { id:"dbox_medium", name:"Donut Box Medium",      price:45,  cat:"Menü", icon:"donut_box.png", donutBox:true, groupSize:6,  desc:"6× Donut" },
-  { id:"dbox_large",  name:"Donut Box Large",       price:89,  cat:"Menü", icon:"donut_box.png", donutBox:true, groupSize:12, desc:"12× Donut" },
-  { id:"dbox_xl",     name:"Donut Box X-tra Large", price:145, cat:"Menü", icon:"donut_box.png", donutBox:true, groupSize:20, desc:"20× Donut" }
+  // === FOOD ===
+  { id:"baguette",          name:"Baguette",             price:12, cat:"Food",   icon:"Baguette.png" },
+  { id:"cheeseburger",      name:"Cheeseburger",         price:14, cat:"Food" },
+  { id:"chicken_burger",    name:"Chicken Burger",       price:14, cat:"Food" },
+  { id:"vegan_burger",      name:"Vegan Burger",         price:12, cat:"Food" }
 ];
 
 /* =========================
@@ -291,10 +268,8 @@ function normalizeProducts(list) {
     const extra = {};
     if (p.icon) extra.icon = String(p.icon);
     if (p.desc) extra.desc = String(p.desc);
-    if (p.groupSize) extra.groupSize = Number(p.groupSize);
-    if (p.chickenBox) extra.chickenBox = true;
-    if (p.donutBox) extra.donutBox = true;
-    if (p.germanBox) extra.germanBox = true;
+    if (p.subcat) extra.subcat = String(p.subcat);
+    if (p.alcoholFree) extra.alcoholFree = true;
     out.push({ id, name, cat, price: Math.round(price), ...extra });
   }
 
@@ -307,14 +282,12 @@ function normalizeProducts(list) {
     const extra = {};
     if (dp.icon) extra.icon = String(dp.icon);
     if (dp.desc) extra.desc = String(dp.desc);
-    if (dp.groupSize) extra.groupSize = Number(dp.groupSize);
-    if (dp.chickenBox) extra.chickenBox = true;
-    if (dp.donutBox) extra.donutBox = true;
-    if (dp.germanBox) extra.germanBox = true;
+    if (dp.subcat) extra.subcat = String(dp.subcat);
+    if (dp.alcoholFree) extra.alcoholFree = true;
     if (!map.has(id)) {
       map.set(id, { id, name: dp.name, cat: dp.cat, price: Math.round(Number(dp.price) || 0), ...extra });
     } else {
-      // Always sync extra fields from defaults (groupSize, icon, desc)
+      // Always sync extra fields from defaults
       Object.assign(map.get(id), extra);
     }
   }
@@ -1660,5 +1633,5 @@ app.post("/presence/leave", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`BurgerShot Server läuft auf http://localhost:${PORT}`);
+  console.log(`Bahama Mama's Server läuft auf http://localhost:${PORT}`);
 });
