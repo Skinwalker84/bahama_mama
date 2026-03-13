@@ -170,6 +170,7 @@ const DEFAULT_PRODUCTS = [
   { id:"cosmopolitan",      name:"Cosmopolitan",         price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Cosmopolitan.png" },
   { id:"caipirinha",        name:"Caipirinha",           price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Caipirinha.png" },
   { id:"tequila_sunrise",   name:"Tequila Sunrise",      price:12, cat:"Drinks", subcat:"Cocktails",  icon:"Tequilla_Sunrise.png" },
+  { id:"frozen_daiquiri",   name:"Frozen Daiquiri",      price:12, cat:"Drinks", subcat:"Cocktails",  icon:"frozen_daiquiri.png" },
   { id:"virgin_pina_colada",name:"Virgin Piña Colada",  price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Virgin_Pina_Colada.png",  alcoholFree:true },
   { id:"magno_mojito",      name:"Mango Mojito",         price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Magno_Mojito_Zero.png",   alcoholFree:true },
   { id:"peach_passion",     name:"Peach Passion Fizz",  price:8,  cat:"Drinks", subcat:"Cocktails",  icon:"Peach_Passion_Fizz.png",  alcoholFree:true },
@@ -185,6 +186,10 @@ const DEFAULT_PRODUCTS = [
   // === DRINKS — Shots ===
   { id:"vodka_shot",        name:"Vodka Shot",           price:6,  cat:"Drinks", subcat:"Shots",      icon:"vodka_shot.png" },
   { id:"tequila_shot",      name:"Tequila Shot",         price:6,  cat:"Drinks", subcat:"Shots",      icon:"tequila_shot.png" },
+  { id:"golden_rum_shot",   name:"Golden Rum Shot",      price:6,  cat:"Drinks", subcat:"Shots",      icon:"golden_rum_shot.png" },
+
+  // === DRINKS — Bier ===
+  { id:"vespucci_bier",     name:"Vespucci Beer",        price:8,  cat:"Drinks", subcat:"Bier",       icon:"vespucci_bier.png" },
 
   // === FOOD ===
   { id:"baguette",          name:"Baguette",             price:12, cat:"Food",   icon:"Baguette.png" },

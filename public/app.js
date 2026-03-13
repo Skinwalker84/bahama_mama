@@ -681,6 +681,7 @@ const PRODUCTS_DEFAULT = [
   { name: "Cosmopolitan",      price: 12, cat: "Drinks", subcat: "Cocktails" },
   { name: "Caipirinha",        price: 12, cat: "Drinks", subcat: "Cocktails" },
   { name: "Tequila Sunrise",   price: 12, cat: "Drinks", subcat: "Cocktails" },
+  { name: "Frozen Daiquiri",   price: 12, cat: "Drinks", subcat: "Cocktails" },
   { name: "Virgin Piña Colada",price: 8,  cat: "Drinks", subcat: "Cocktails" },
   { name: "Mango Mojito",      price: 8,  cat: "Drinks", subcat: "Cocktails" },
   { name: "Peach Passion Fizz",price: 8,  cat: "Drinks", subcat: "Cocktails" },
@@ -690,6 +691,8 @@ const PRODUCTS_DEFAULT = [
   { name: "Dom Pérignon",      price: 35, cat: "Drinks", subcat: "Schaumwein" },
   { name: "Vodka Shot",        price: 6,  cat: "Drinks", subcat: "Shots" },
   { name: "Tequila Shot",      price: 6,  cat: "Drinks", subcat: "Shots" },
+  { name: "Golden Rum Shot",   price: 6,  cat: "Drinks", subcat: "Shots" },
+  { name: "Vespucci Beer",     price: 8,  cat: "Drinks", subcat: "Bier" },
   { name: "Baguette",          price: 12, cat: "Food" },
   { name: "Cheeseburger",      price: 14, cat: "Food" },
   { name: "Chicken Burger",    price: 14, cat: "Food" },
@@ -701,7 +704,7 @@ let PRODUCTS = [];
 function initProducts(){ hydrateProducts(); renderProducts(); }
 
 // bump version so newly added default items (e.g. Light drinks) appear even if older data was cached
-const PRODUCTS_STORAGE_KEY = "bs_products_v4";
+const PRODUCTS_STORAGE_KEY = "bs_products_v5";
 
 // Returns the currently active price based on day of week
 // Mo–Do = price, Fr–So = weekendPrice (if set)
@@ -1622,6 +1625,9 @@ const PRODUCT_ICON = {
   "Mango Mojito":      "Magno_Mojito_Zero.png",
   "Peach Passion Fizz":"Peach_Passion_Fizz.png",
   "Tequila Sunrise":   "Tequilla_Sunrise.png",
+  "Frozen Daiquiri":   "frozen_daiquiri.png",
+  "Golden Rum Shot":   "golden_rum_shot.png",
+  "Vespucci Beer":     "vespucci_bier.png",
   "Manhattan":         "Manhattan.png",
   "Old Fashioned":     "Old_Fashioned.png",
   "Mumm (Sekt)":       "Mumm.png",
