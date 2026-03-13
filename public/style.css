@@ -207,12 +207,14 @@ body{
   height:72px;
   padding:0 18px;
   border-radius:16px;
-  border:2px solid rgba(255,255,255,.35);
-  background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.08));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+  border:2px solid rgba(255,255,255,.6);
+  background:linear-gradient(180deg, #c0392b, #922b21);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 2px 8px rgba(0,0,0,.4);
   cursor:pointer;
-  color:#0b1f33;
+  color:#ffffff;
   font-weight:900;
+  font-size:13px;
+  letter-spacing:.5px;
 }
 
 .posRetro{
