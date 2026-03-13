@@ -2405,7 +2405,22 @@ async function loadDayReport(){
 
   document.getElementById("dayRevenue").innerText=money(data.totals?.revenue||0);
   document.getElementById("dayPurchases").innerText=money(data.totals?.purchases||0);
-  document.getElementById("dayProfit").innerText=money(data.totals?.profit||0);
+
+  // Betriebsausgaben für diesen Tag laden
+  try {
+    const baRes = await fetch("/betriebsausgaben?limit=500");
+    const baData = await baRes.json().catch(()=>({}));
+    const allAusgaben = baData.ausgaben || [];
+    const dayAusgaben = allAusgaben.filter(a => a.date === date);
+    const dayBA = dayAusgaben.reduce((s, a) => s + (a.betrag||0), 0);
+    const el = document.getElementById("dayBetriebsausgaben");
+    if(el) el.innerText = money(dayBA);
+    // Gewinn = Umsatz - Einkaufskosten - Betriebsausgaben
+    const profit = (data.totals?.revenue||0) - (data.totals?.purchases||0) - dayBA;
+    document.getElementById("dayProfit").innerText = money(profit);
+  } catch(e) {
+    document.getElementById("dayProfit").innerText=money(data.totals?.profit||0);
+  }
   const cashEl=document.getElementById("dayCash"); if(cashEl) cashEl.innerText=money(data.totals?.cashRevenue||0);
 
   const tbody=document.getElementById("dayByEmployee");
@@ -2500,12 +2515,30 @@ async function loadWeekReport(){
   if(isBoss() || isManager()){
     document.getElementById("weekRevenue").innerText=money(data.totals?.revenue||0);
     document.getElementById("weekPurchases").innerText=money(data.totals?.purchases||0);
-    document.getElementById("weekProfit").innerText=money(data.totals?.profit||0);
+    // Betriebsausgaben für diese Woche laden
+    try {
+      const baRes = await fetch("/betriebsausgaben?limit=500");
+      const baData = await baRes.json().catch(()=>({}));
+      const allAusgaben = baData.ausgaben || [];
+      // Filter by week date range
+      const rangeStart = data.range?.start || "";
+      const rangeEnd = data.range?.end || "";
+      const weekBA = allAusgaben
+        .filter(a => a.date >= rangeStart && a.date <= rangeEnd)
+        .reduce((s, a) => s + (a.betrag||0), 0);
+      const el = document.getElementById("weekBetriebsausgaben");
+      if(el) el.innerText = money(weekBA);
+      const profit = (data.totals?.revenue||0) - (data.totals?.purchases||0) - weekBA;
+      document.getElementById("weekProfit").innerText = money(profit);
+    } catch(e) {
+      document.getElementById("weekProfit").innerText=money(data.totals?.profit||0);
+    }
     document.getElementById("weekOrders").innerText=String(data.totals?.orders||0);
   } else {
     // Staff: mask all totals
     document.getElementById("weekRevenue").innerText="—";
     document.getElementById("weekPurchases").innerText="—";
+    document.getElementById("weekBetriebsausgaben").innerText="—";
     document.getElementById("weekProfit").innerText="—";
     document.getElementById("weekOrders").innerText="—";
   }
@@ -2567,7 +2600,23 @@ async function loadMonthReport(){
 
   document.getElementById("monthRevenue").innerText=money(data.totals?.revenue||0);
   document.getElementById("monthPurchases").innerText=money(data.totals?.purchases||0);
-  document.getElementById("monthProfit").innerText=money(data.totals?.profit||0);
+
+  // Betriebsausgaben für diesen Monat laden
+  try {
+    const baRes = await fetch("/betriebsausgaben?limit=500");
+    const baData = await baRes.json().catch(()=>({}));
+    const allAusgaben = baData.ausgaben || [];
+    // Filter by month prefix (YYYY-MM)
+    const monthBA = allAusgaben
+      .filter(a => (a.date || "").startsWith(ym))
+      .reduce((s, a) => s + (a.betrag||0), 0);
+    const el = document.getElementById("monthBetriebsausgaben");
+    if(el) el.innerText = money(monthBA);
+    const profit = (data.totals?.revenue||0) - (data.totals?.purchases||0) - monthBA;
+    document.getElementById("monthProfit").innerText = money(profit);
+  } catch(e) {
+    document.getElementById("monthProfit").innerText=money(data.totals?.profit||0);
+  }
   document.getElementById("monthOrders").innerText=String(data.totals?.orders||0);
 
   const tbody=document.getElementById("monthByEmployee");
