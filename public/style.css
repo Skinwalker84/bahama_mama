@@ -185,8 +185,8 @@ body{
 
 .retroRight{ display:flex; gap:10px; align-items:center; }
 .iconBtn{
-  width:92px;
-  height:72px;
+  width:76px;
+  height:60px;
   border-radius:14px;
   border:2px solid rgba(255,255,255,.35);
   background:linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.08));
@@ -200,16 +200,16 @@ body{
   color:#ffffff;
   font-weight:900;
 }
-.iconBtn img{ width:38px; height:38px; object-fit:contain; }
-.iconBtn span{ font-size:12px; line-height:12px; }
+.iconBtn img{ width:28px; height:28px; object-fit:contain; }
+.iconBtn span{ font-size:10px; line-height:11px; }
 
 .logoutBtn{
-  height:72px;
-  padding:0 18px;
+  height:60px;
+  padding:0 16px;
   border-radius:16px;
-  border:2px solid rgba(255,255,255,.6);
-  background:linear-gradient(180deg, #c0392b, #922b21);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 2px 8px rgba(0,0,0,.4);
+  border:2px solid rgba(255,255,255,.35);
+  background:linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.08));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
   cursor:pointer;
   color:#ffffff;
   font-weight:900;
