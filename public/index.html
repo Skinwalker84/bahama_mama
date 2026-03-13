@@ -733,6 +733,64 @@
           </div>
         </div>
 
+        <!-- Betriebsausgaben -->
+        <div class="panel" id="panel_betriebsausgaben" style="margin-top:14px;">
+          <div class="row" style="justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleSection('betriebsausgaben'); if(!document.getElementById('betriebsausgaben').classList.contains('hidden')) loadBetriebsausgaben();">
+            <div>
+              <div style="font-weight:900;">Betriebsausgaben</div>
+              <div class="muted small">Laufende Kosten & Ausgaben</div>
+            </div>
+            <span id="betriebsausgabenArrow" style="font-size:18px; transition:transform .2s;">▼</span>
+          </div>
+          <div id="betriebsausgaben" class="hidden">
+            <div style="margin-top:12px;">
+              <!-- Neue Ausgabe erfassen -->
+              <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end;">
+                <div style="flex:2 1 160px;">
+                  <div class="muted small" style="margin-bottom:4px;">Kategorie</div>
+                  <select id="ausgabeKategorie" class="input" style="width:100%;">
+                    <option value="Anwalt">Anwalt</option>
+                    <option value="Hausmeisterservice">Hausmeisterservice</option>
+                    <option value="Lager">Lager</option>
+                    <option value="Sonstiges">Sonstiges</option>
+                  </select>
+                </div>
+                <div style="flex:2 1 160px;">
+                  <div class="muted small" style="margin-bottom:4px;">Beschreibung</div>
+                  <input id="ausgabeBeschreibung" class="input" style="width:100%;" placeholder="z.B. Monatsrechnung..." />
+                </div>
+                <div style="flex:1 1 100px;">
+                  <div class="muted small" style="margin-bottom:4px;">Betrag ($)</div>
+                  <input id="ausgabeBetrag" class="input" style="width:100%; text-align:right;" placeholder="0" type="number" min="0" step="1" />
+                </div>
+                <div>
+                  <button class="primary" onclick="addBetriebsausgabe()">+ Eintragen</button>
+                </div>
+              </div>
+              <div class="muted small" id="ausgabeMsg" style="margin-top:6px;">—</div>
+            </div>
+            <!-- Ausgaben Liste -->
+            <div style="margin-top:14px; overflow:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Datum</th>
+                    <th>Kategorie</th>
+                    <th>Beschreibung</th>
+                    <th style="text-align:right;">Betrag</th>
+                    <th>Eingetragen von</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="ausgabenBody"><tr><td colspan="6" class="muted small">Keine Ausgaben.</td></tr></tbody>
+              </table>
+            </div>
+            <div style="margin-top:10px; display:flex; justify-content:flex-end; gap:16px; align-items:center;">
+              <div class="muted small">Gesamt: <strong id="ausgabenGesamt">$0</strong></div>
+            </div>
+          </div>
+        </div>
+
         <!-- Testphase Reset -->
         <div class="panel" style="margin-top:14px; border:2px solid #ef4444;">
           <div class="row" style="justify-content:space-between; align-items:center;">

@@ -951,6 +951,51 @@ app.post("/tip-payouts", requireAuth, requireBoss, (req, res) => {
 });
 
 /* =========================
+   BETRIEBSAUSGABEN
+   ========================= */
+app.get("/betriebsausgaben", requireAuth, requireBoss, (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit) || 200, 500);
+  const list = (db.betriebsausgaben || []).slice().reverse().slice(0, limit);
+  res.json({ success: true, ausgaben: list });
+});
+
+app.post("/betriebsausgaben", requireAuth, requireBoss, (req, res) => {
+  const { kategorie, beschreibung, betrag } = req.body || {};
+  if (!kategorie || typeof kategorie !== "string") return res.status(400).json({ success: false, message: "Kategorie fehlt." });
+  const amount = Math.round(Number(betrag));
+  if (!Number.isFinite(amount) || amount <= 0) return res.status(400).json({ success: false, message: "Ungültiger Betrag." });
+
+  const ausgabe = {
+    id: crypto.randomBytes(8).toString("hex"),
+    date: getDayKeyLocal(new Date()),
+    ts: Date.now(),
+    kategorie: String(kategorie).trim(),
+    beschreibung: String(beschreibung || "").trim(),
+    betrag: amount,
+    user: req.user.username
+  };
+
+  if (!Array.isArray(db.betriebsausgaben)) db.betriebsausgaben = [];
+  db.betriebsausgaben.push(ausgabe);
+  if (db.betriebsausgaben.length > 2000) db.betriebsausgaben = db.betriebsausgaben.slice(-2000);
+
+  saveDB(db);
+  res.json({ success: true, ausgabe });
+});
+
+app.delete("/betriebsausgaben/:id", requireAuth, requireBoss, (req, res) => {
+  const id = req.params.id;
+  if (!Array.isArray(db.betriebsausgaben)) return res.status(404).json({ success: false });
+  const before = db.betriebsausgaben.length;
+  db.betriebsausgaben = db.betriebsausgaben.filter(a => a.id !== id);
+  if (db.betriebsausgaben.length === before) return res.status(404).json({ success: false, message: "Nicht gefunden." });
+  saveDB(db);
+  res.json({ success: true });
+});
+
+
+
+/* =========================
    SCHWARZES BRETT
    ========================= */
 app.get("/board", requireAuth, (req, res) => {

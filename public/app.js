@@ -1410,6 +1410,71 @@ async function loadTipPayouts(){
   }
 }
 
+/* ===== BETRIEBSAUSGABEN ===== */
+async function loadBetriebsausgaben(){
+  const body = document.getElementById("ausgabenBody");
+  const gesamt = document.getElementById("ausgabenGesamt");
+  if(!body) return;
+  try{
+    const res = await fetch("/betriebsausgaben");
+    const data = await res.json().catch(()=>({}));
+    const ausgaben = data.ausgaben || [];
+    if(!ausgaben.length){
+      body.innerHTML = `<tr><td colspan="6" class="muted small">Keine Ausgaben.</td></tr>`;
+      if(gesamt) gesamt.textContent = "$0";
+      return;
+    }
+    const total = ausgaben.reduce((s, a) => s + (a.betrag||0), 0);
+    body.innerHTML = ausgaben.map(a => `<tr>
+      <td>${esc(a.date||"")}</td>
+      <td>${esc(a.kategorie||"")}</td>
+      <td>${esc(a.beschreibung||"—")}</td>
+      <td style="text-align:right;">${money(a.betrag||0)}</td>
+      <td>${esc(a.user||"")}</td>
+      <td><button class="ghost" style="padding:2px 8px; font-size:11px; color:#ef4444; border-color:#ef4444;" onclick="deleteBetriebsausgabe('${escAttr(a.id)}')">✕</button></td>
+    </tr>`).join("");
+    if(gesamt) gesamt.textContent = money(total);
+  }catch(e){
+    body.innerHTML = `<tr><td colspan="6" class="muted small">Fehler beim Laden.</td></tr>`;
+  }
+}
+
+async function addBetriebsausgabe(){
+  const msg = document.getElementById("ausgabeMsg");
+  const kategorie = document.getElementById("ausgabeKategorie")?.value?.trim();
+  const beschreibung = document.getElementById("ausgabeBeschreibung")?.value?.trim();
+  const betrag = parseFloat(document.getElementById("ausgabeBetrag")?.value);
+  if(!kategorie){ if(msg) msg.innerText="Kategorie fehlt."; return; }
+  if(!Number.isFinite(betrag) || betrag <= 0){ if(msg) msg.innerText="Ungültiger Betrag."; return; }
+  try{
+    const res = await fetch("/betriebsausgaben", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ kategorie, beschreibung, betrag: Math.round(betrag) })
+    });
+    const data = await res.json().catch(()=>({}));
+    if(res.ok && data.success){
+      if(msg) msg.innerText = "Eingetragen ✅";
+      document.getElementById("ausgabeBeschreibung").value = "";
+      document.getElementById("ausgabeBetrag").value = "";
+      loadBetriebsausgaben();
+    } else {
+      if(msg) msg.innerText = data.message || "Fehler.";
+    }
+  }catch(e){
+    if(msg) msg.innerText = "Fehler beim Speichern.";
+  }
+}
+
+async function deleteBetriebsausgabe(id){
+  if(!confirm("Ausgabe löschen?")) return;
+  try{
+    const res = await fetch("/betriebsausgaben/"+id, { method:"DELETE" });
+    const data = await res.json().catch(()=>({}));
+    if(res.ok && data.success){ loadBetriebsausgaben(); }
+  }catch(e){}
+}
+
 /* ===== BANK BALANCE ===== */
 async function loadBankBalance(){
   try{
