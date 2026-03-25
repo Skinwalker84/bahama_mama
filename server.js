@@ -192,7 +192,7 @@ const DEFAULT_PRODUCTS = [
   { id:"vespucci_bier",     name:"Vespucci Beer",        price:8,  cat:"Drinks", subcat:"Bier",       icon:"vespucci_bier.png" },
 
   // === TÜR ===
-  { id:"eintritt",          name:"Eintritt",             price:10, cat:"Tür" },
+  { id:"eintritt",          name:"Eintritt",             price:10, cat:"Tür",    icon:"eintritt.png" },
   { id:"baguette",          name:"Baguette",             price:12, cat:"Food",   icon:"Baguette.png" },
   { id:"cheeseburger",      name:"Cheeseburger",         price:14, cat:"Food",   icon:"burgershot_the_bleeder.png" },
   { id:"chicken_burger",    name:"Chicken Burger",       price:14, cat:"Food",   icon:"burgershot_the_chicken.png" },
