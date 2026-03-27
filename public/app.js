@@ -693,7 +693,8 @@ const PRODUCTS_DEFAULT = [
   { name: "Tequila Shot",      price: 6,  cat: "Drinks", subcat: "Shots" },
   { name: "Golden Rum Shot",   price: 6,  cat: "Drinks", subcat: "Shots" },
   { name: "Vespucci Beer",     price: 8,  cat: "Drinks", subcat: "Bier" },
-  { name: "Eintritt",          price: 10, cat: "Tür" },
+  { name: "Eintritt $50",      price: 50,  cat: "Tür",  icon:"eintritt.png" },
+  { name: "Eintritt $100",     price: 100, cat: "Tür",  icon:"eintritt.png" },
   { name: "Baguette",          price: 12, cat: "Food" },
   { name: "Cheeseburger",      price: 14, cat: "Food" },
   { name: "Chicken Burger",    price: 14, cat: "Food" },
@@ -705,7 +706,7 @@ let PRODUCTS = [];
 function initProducts(){ hydrateProducts(); renderProducts(); }
 
 // bump version so newly added default items (e.g. Light drinks) appear even if older data was cached
-const PRODUCTS_STORAGE_KEY = "bs_products_v7";
+const PRODUCTS_STORAGE_KEY = "bs_products_v8";
 
 // Returns the currently active price based on day of week
 // Mo–Do = price, Fr–So = weekendPrice (if set)
@@ -1694,7 +1695,8 @@ const PRODUCT_ICON = {
   "Frozen Daiquiri":   "frozen_daiquiri.png",
   "Golden Rum Shot":   "golden_rum_shot.png",
   "Vespucci Beer":     "vespucci_bier.png",
-  "Eintritt":          "eintritt.png",
+  "Eintritt $50":      "eintritt.png",
+  "Eintritt $100":     "eintritt.png",
   "Manhattan":         "Manhattan.png",
   "Old Fashioned":     "Old_Fashioned.png",
   "Mumm (Sekt)":       "Mumm.png",
